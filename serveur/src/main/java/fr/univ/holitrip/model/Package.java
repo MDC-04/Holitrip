@@ -13,6 +13,7 @@ import java.util.List;
  *   - Activities: Museum, Concert, Restaurant
  *   - Errors: list of encountered errors (if any)
  */
+
 public class Package {
     private Trip outboundTrip;
     private Trip returnTrip;

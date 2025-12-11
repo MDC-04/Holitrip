@@ -13,6 +13,7 @@ import java.util.List;
  *   - Transport 1: Bordeaux -> Paris
  *   - Transport 2: Paris -> Rennes
  */
+
 public class Trip {
     private List<Transport> transports;
 

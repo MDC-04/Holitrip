@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Grand Hôtel Bordeaux",
+    "address": "5 Place de la Comédie",
+    "city": "Bordeaux",
+    "rating": 5,
+    "pricePerNight": 180.0
+  },
+  {
+    "name": "Hôtel du Centre",
+    "address": "12 Rue Sainte-Catherine",
+    "city": "Bordeaux",
+    "rating": 3,
+    "pricePerNight": 85.0
+  },
+  {
+    "name": "Le Bristol Paris",
+    "address": "112 Rue du Faubourg Saint-Honoré",
+    "city": "Paris",
+    "rating": 5,
+    "pricePerNight": 450.0
+  },
+  {
+    "name": "Hôtel Ibis Paris Gare de Lyon",
+    "address": "2 Place Louis Armand",
+    "city": "Paris",
+    "rating": 3,
+    "pricePerNight": 95.0
+  },
+  {
+    "name": "Hôtel Formule 1 Paris",
+    "address": "50 Avenue de la Porte de Châtillon",
+    "city": "Paris",
+    "rating": 1,
+    "pricePerNight": 45.0
+  },
+  {
+    "name": "Villa Florentine",
+    "address": "25 Montée Saint-Barthélémy",
+    "city": "Lyon",
+    "rating": 5,
+    "pricePerNight": 320.0
+  },
+  {
+    "name": "Hôtel des Artistes",
+    "address": "8 Rue Gaspard-André",
+    "city": "Lyon",
+    "rating": 4,
+    "pricePerNight": 140.0
+  },
+  {
+    "name": "Grand Hôtel de l'Opéra",
+    "address": "1 Place du Capitole",
+    "city": "Toulouse",
+    "rating": 5,
+    "pricePerNight": 220.0
+  },
+  {
+    "name": "Hôtel des Beaux Arts",
+    "address": "1 Place du Pont Neuf",
+    "city": "Toulouse",
+    "rating": 3,
+    "pricePerNight": 78.0
+  },
+  {
+    "name": "InterContinental Marseille",
+    "address": "280 Boulevard Michelet",
+    "city": "Marseille",
+    "rating": 5,
+    "pricePerNight": 290.0
+  },
+  {
+    "name": "Hôtel Le Corbusier",
+    "address": "280 Boulevard Michelet",
+    "city": "Marseille",
+    "rating": 4,
+    "pricePerNight": 125.0
+  },
+  {
+    "name": "Hôtel de la Plage",
+    "address": "3 Avenue de la Milady",
+    "city": "Biarritz",
+    "rating": 4,
+    "pricePerNight": 160.0
+  }
+]

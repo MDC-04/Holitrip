@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Musée du Louvre",
+    "address": "Rue de Rivoli",
+    "city": "Paris",
+    "date": "2025-01-16",
+    "category": "CULTURE",
+    "price": 17.0
+  },
+  {
+    "name": "Tour Eiffel",
+    "address": "Champ de Mars",
+    "city": "Paris",
+    "date": "2025-01-16",
+    "category": "CULTURE",
+    "price": 26.0
+  },
+  {
+    "name": "Concert Philharmonie",
+    "address": "221 Avenue Jean Jaurès",
+    "city": "Paris",
+    "date": "2025-01-16",
+    "category": "MUSIC",
+    "price": 45.0
+  },
+  {
+    "name": "Restaurant Le Jules Verne",
+    "address": "Avenue Gustave Eiffel",
+    "city": "Paris",
+    "date": "2025-01-17",
+    "category": "FOOD",
+    "price": 95.0
+  },
+  {
+    "name": "Musée des Confluences",
+    "address": "86 Quai Perrache",
+    "city": "Lyon",
+    "date": "2025-01-16",
+    "category": "CULTURE",
+    "price": 9.0
+  },
+  {
+    "name": "Parc de la Tête d'Or",
+    "address": "Place Général Leclerc",
+    "city": "Lyon",
+    "date": "2025-01-16",
+    "category": "SPORT",
+    "price": 0.0
+  },
+  {
+    "name": "Opéra de Lyon",
+    "address": "1 Place de la Comédie",
+    "city": "Lyon",
+    "date": "2025-01-17",
+    "category": "MUSIC",
+    "price": 55.0
+  },
+  {
+    "name": "Bouchon Lyonnais",
+    "address": "Rue Mercière",
+    "city": "Lyon",
+    "date": "2025-01-17",
+    "category": "FOOD",
+    "price": 35.0
+  },
+  {
+    "name": "Cité de l'Espace",
+    "address": "Avenue Jean Gonord",
+    "city": "Toulouse",
+    "date": "2025-01-16",
+    "category": "CULTURE",
+    "price": 28.0
+  },
+  {
+    "name": "Stade Toulousain Match",
+    "address": "114 Rue des Troènes",
+    "city": "Toulouse",
+    "date": "2025-01-16",
+    "category": "SPORT",
+    "price": 40.0
+  },
+  {
+    "name": "Cité de la Mer",
+    "address": "Gare Maritime Transatlantique",
+    "city": "Bordeaux",
+    "date": "2025-01-16",
+    "category": "CULTURE",
+    "price": 19.0
+  },
+  {
+    "name": "Dégustation Vin",
+    "address": "Quai des Chartrons",
+    "city": "Bordeaux",
+    "date": "2025-01-16",
+    "category": "FOOD",
+    "price": 50.0
+  },
+  {
+    "name": "Calanques en Kayak",
+    "address": "Port des Goudes",
+    "city": "Marseille",
+    "date": "2025-01-16",
+    "category": "SPORT",
+    "price": 45.0
+  },
+  {
+    "name": "MuCEM",
+    "address": "Esplanade du J4",
+    "city": "Marseille",
+    "date": "2025-01-17",
+    "category": "CULTURE",
+    "price": 11.0
+  },
+  {
+    "name": "Bouillabaisse Chez Fonfon",
+    "address": "140 Rue du Vallon des Auffes",
+    "city": "Marseille",
+    "date": "2025-01-17",
+    "category": "FOOD",
+    "price": 65.0
+  }
+]

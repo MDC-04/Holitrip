@@ -1,0 +1,50 @@
+[
+  {
+    "departureCity": "Bordeaux",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2025-01-15T08:00:00",
+    "arrivalDateTime": "2025-01-15T10:30:00",
+    "mode": "TRAIN",
+    "price": 85.0
+  },
+  {
+    "departureCity": "Bordeaux",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2025-01-15T14:00:00",
+    "arrivalDateTime": "2025-01-15T15:30:00",
+    "mode": "PLANE",
+    "price": 120.0
+  },
+  {
+    "departureCity": "Bordeaux",
+    "arrivalCity": "Toulouse",
+    "departureDateTime": "2025-01-15T09:00:00",
+    "arrivalDateTime": "2025-01-15T12:00:00",
+    "mode": "TRAIN",
+    "price": 35.0
+  },
+  {
+    "departureCity": "Bordeaux",
+    "arrivalCity": "Biarritz",
+    "departureDateTime": "2025-01-15T13:00:00",
+    "arrivalDateTime": "2025-01-15T14:30:00",
+    "mode": "TRAIN",
+    "price": 20.0
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Nantes",
+    "departureDateTime": "2025-01-15T11:00:00",
+    "arrivalDateTime": "2025-01-15T15:30:00",
+    "mode": "TRAIN",
+    "price": 75.0
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Lyon",
+    "departureDateTime": "2025-01-15T12:00:00",
+    "arrivalDateTime": "2025-01-15T14:00:00",
+    "mode": "PLANE",
+    "price": 95.0
+  }
+]

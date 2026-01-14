@@ -1,7 +1,9 @@
 # Projet Holitrip - Application de Planification de Séjours
 
 ## Membres de l'équipe
-(À compléter avec vos noms et prénoms)
+Mohamed Dyae CHELLAF
+Mohamed Taha SANDI
+Mohamed Reda EL KHADER
 
 ## Architecture de l'application
 

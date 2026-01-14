@@ -1,0 +1,17 @@
+# Fichiers IDE
+.idea/
+*.iml
+.vscode/
+
+# Build
+target/
+*.class
+*.jar
+*.war
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

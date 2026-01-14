@@ -1,4 +1,4 @@
-package fr.univ.holitrip.service;
+package fr.univ.holitrip.service.unit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,7 +12,7 @@ import fr.univ.holitrip.model.Transport;
 import fr.univ.holitrip.service.impl.JsonTransportService;
 
 public class TransportServiceTest {
-    private TransportService transportService;
+    private fr.univ.holitrip.service.TransportService transportService;
 
     @BeforeEach
     void setUp() {
@@ -24,7 +24,7 @@ public class TransportServiceTest {
         //ARRANGE
         String departureCity = "Bordeaux"; 
         String arrivalCity = "Paris";
-        LocalDateTime departureDate = LocalDateTime.of(2025, 1, 15, 8, 0);
+        LocalDateTime departureDate = LocalDateTime.of(2026, 2, 10, 9, 0);
         String mode = null;
         
         //ACT
@@ -34,17 +34,19 @@ public class TransportServiceTest {
         assertNotNull(transports);
         assertFalse(transports.isEmpty());
         for (Transport transport : transports) {
-            assertEquals("Bordeaux", transport.getDepartureCity());
-            assertEquals("Paris", transport.getArrivalCity());
+            assertEquals(departureCity, transport.getDepartureCity());
+            assertEquals(arrivalCity, transport.getArrivalCity());
+            //assertEquals(departureDate, transport.getDepartureDateTime());
+            assertTrue(transport.getMode().equalsIgnoreCase("TRAIN") || transport.getMode().equalsIgnoreCase("PLANE"));
         }
     }
 
     @Test
-    void testFindTransports_BordeauxParis_TrainOnly_ShouldReturn1() {
+    void testFindTransports_BordeauxParis_TrainOnly() {
         //ARRANGE
         String departureCity = "Bordeaux";
         String arrivalCity = "Paris";
-        LocalDateTime departureDate = LocalDateTime.of(2025, 1, 15, 8, 0);
+        LocalDateTime departureDate = LocalDateTime.of(2026, 2, 10, 9, 0);
         String mode = "TRAIN";
         
         //ACT
@@ -52,16 +54,21 @@ public class TransportServiceTest {
         
         //ASSERT
         assertNotNull(transports);
-        assertEquals(1, transports.size());
-        assertEquals("TRAIN", transports.get(0).getMode());
+        assertFalse(transports.isEmpty());
+        for (Transport transport : transports) {
+            assertEquals(departureCity, transport.getDepartureCity());
+            assertEquals(arrivalCity, transport.getArrivalCity());
+            //assertEquals(departureDate, transport.getDepartureDateTime());
+            assertEquals(mode, transport.getMode());
+        }
     }
 
     @Test
-    void testFindTransports_BordeauxParis_PlaneOnly_ShouldReturn1() {
+    void testFindTransports_BordeauxParis_PlaneOnly() {
         //ARRANGE
         String departureCity = "Bordeaux";
         String arrivalCity = "Paris";
-        LocalDateTime departureDate = LocalDateTime.of(2025, 1, 15, 8, 0);
+        LocalDateTime departureDate = LocalDateTime.of(2026, 2, 10, 9, 0);
         String mode = "PLANE";
         
         //ACT
@@ -69,16 +76,21 @@ public class TransportServiceTest {
         
         //ASSERT
         assertNotNull(transports);
-        assertEquals(1, transports.size());
-        assertEquals("PLANE", transports.get(0).getMode());
+        assertFalse(transports.isEmpty());
+        for (Transport transport : transports) {
+            assertEquals(departureCity, transport.getDepartureCity());
+            assertEquals(arrivalCity, transport.getArrivalCity());
+            //assertEquals(departureDate, transport.getDepartureDateTime());
+            assertEquals(mode, transport.getMode());
+        }
     }
 
     @Test
     void testFindTransports_InvalidCity_ShouldReturnEmpty() {
         //ARRANGE
-        String departureCity = "InvalidCity";
+        String departureCity = "Copenhagen";
         String arrivalCity = "Paris";
-        LocalDateTime departureDate = LocalDateTime.of(2025, 1, 15, 8, 0);
+        LocalDateTime departureDate = LocalDateTime.of(2026, 2, 10, 9, 0);
         String mode = null;
         
         //ACT
@@ -89,12 +101,28 @@ public class TransportServiceTest {
         assertTrue(transports.isEmpty());
     }
 
+    @Test 
+    void testFindTransports_NoAvailableDate_ShouldReturnEmpty() {
+        //ARRANGE
+        String departureCity = "Bordeaux";
+        String arrivalCity = "Paris";
+        LocalDateTime departureDate = LocalDateTime.of(2030, 1, 1, 0, 0); 
+        String mode = null;
+        
+        //ACT
+        List<Transport> transports = transportService.findTransports(departureCity, arrivalCity, departureDate, mode);
+
+        //ASSERT
+        assertNotNull(transports);
+        assertTrue(transports.isEmpty());
+    }
+
     @Test
     void testFindTransports_CaseInsensitive_ShouldWork() {
         //ARRANGE
         String departureCity = "bordeaux"; // Minuscules
         String arrivalCity = "PARIS";      // Majuscules
-        LocalDateTime departureDate = LocalDateTime.of(2025, 1, 15, 8, 0);
+        LocalDateTime departureDate = LocalDateTime.of(2026, 2, 10, 9, 0);
         String mode = "train";             // Minuscules
         
         //ACT
@@ -105,4 +133,3 @@ public class TransportServiceTest {
         assertFalse(transports.isEmpty());
     }
 }
-

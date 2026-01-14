@@ -1,4 +1,4 @@
-package fr.univ.holitrip.service;
+package fr.univ.holitrip.service.unit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -20,12 +20,12 @@ import fr.univ.holitrip.service.impl.JsonActivityService;
 class ActivityServiceTest {
     
     @Mock
-    private GeocodingService geocodingService;
+    private fr.univ.holitrip.service.GeocodingService geocodingService;
     
     @Mock
-    private DistanceService distanceService;
+    private fr.univ.holitrip.service.DistanceService distanceService;
     
-    private ActivityService activityService;
+    private fr.univ.holitrip.service.ActivityService activityService;
 
     @BeforeEach
     void setUp() throws Exception {

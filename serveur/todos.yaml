@@ -6,11 +6,11 @@
 
 phase_1_conception:
   titre: "Conception & Architecture"
-  statut: "en_cours"
+  statut: "termine"
   taches:
     - id: 1.1
       titre: "Définir les interfaces principales"
-      statut: "en_cours"
+      statut: "termine"
       description: |
         Créer les interfaces pour favoriser l'injection de dépendances et faciliter les tests
       interfaces_a_creer:
@@ -23,7 +23,7 @@ phase_1_conception:
       
     - id: 1.2
       titre: "Créer les modèles de données (DTOs)"
-      statut: "non_commence"
+      statut: "termine"
       modeles_a_creer:
         - Trajet:
             proprietes:
@@ -81,11 +81,11 @@ phase_1_conception:
 
 phase_2_donnees:
   titre: "Création des données de test"
-  statut: "non_commence"
+  statut: "termine"
   taches:
     - id: 2.1
       titre: "Créer fichier transports.json"
-      statut: "non_commence"
+      statut: "termine"
       contenu_minimum:
         - Plusieurs villes: "Paris, Bordeaux, Lyon, Rennes, Marseille, Toulouse"
         - Modes: "AVION et TRAIN"
@@ -107,7 +107,7 @@ phase_2_donnees:
     
     - id: 2.2
       titre: "Créer fichier hotels.json"
-      statut: "non_commence"
+      statut: "termine"
       contenu_minimum:
         - Villes: "Même villes que transports"
         - Notes: "1 à 5 étoiles"
@@ -127,7 +127,7 @@ phase_2_donnees:
     
     - id: 2.3
       titre: "Créer fichier activites.json"
-      statut: "non_commence"
+      statut: "termine"
       contenu_minimum:
         - Catégories: "EXPOSITION, SPORT, MUSIQUE, CULTURE, GASTRONOMIE, NATURE, SPECTACLE"
         - Dates: "Correspondre aux périodes de séjour possibles"
@@ -152,11 +152,11 @@ phase_2_donnees:
 
 phase_3_implementation:
   titre: "Implémentation des services"
-  statut: "non_commence"
+  statut: "en_cours"
   taches:
     - id: 3.1
       titre: "Implémenter services de lecture de données"
-      statut: "non_commence"
+      statut: "termine"
       services:
         - TransportServiceImpl: "Lire transports.json + filtrer par critères"
         - HotelServiceImpl: "Lire hotels.json + filtrer par note/ville"
@@ -167,7 +167,7 @@ phase_3_implementation:
     
     - id: 3.2
       titre: "Implémenter service de géocodage"
-      statut: "non_commence"
+      statut: "termine"
       description: "Wrapper autour de geocode.maps (TP4)"
       implementation:
         - "GeocodingServiceImpl"
@@ -178,7 +178,7 @@ phase_3_implementation:
     
     - id: 3.3
       titre: "Implémenter service de calcul de distance"
-      statut: "non_commence"
+      statut: "termine"
       description: "Formule d'Haversine pour distance à vol d'oiseau"
       implementation:
         - "DistanceServiceImpl"
@@ -191,7 +191,7 @@ phase_3_implementation:
     
     - id: 3.4
       titre: "Implémenter logique métier du ForfaitService"
-      statut: "non_commence"
+      statut: "en_cours"
       exigences_a_implementer:
         - recherche_transports:
             - "Filtrer par mode (AVION/TRAIN/null)"

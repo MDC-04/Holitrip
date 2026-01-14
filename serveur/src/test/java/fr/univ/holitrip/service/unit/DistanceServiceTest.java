@@ -1,9 +1,10 @@
-package fr.univ.holitrip.service;
+package fr.univ.holitrip.service.unit;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import fr.univ.holitrip.model.Coordinates;
+import fr.univ.holitrip.service.DistanceService;
 import fr.univ.holitrip.service.impl.HaversineDistanceService;
 
 class DistanceServiceTest {
@@ -35,17 +36,4 @@ class DistanceServiceTest {
         assertEquals(0, distance, 0.1);
     }
 
-    // @Test
-    // void testCalculateDistance_BordeauxToulouse_ShouldReturnApproximately245km() {
-    //     //ARRANGE
-    //     Coordinates bordeaux = new Coordinates(44.8378, -0.5792);
-    //     Coordinates toulouse = new Coordinates(43.6047, 1.4442);
-    //     DistanceService service = new HaversineDistanceService();
-
-    //     //ACT
-    //     double distance = service.calculateDistance(bordeaux, toulouse);
-
-    //     //ASSERT
-    //     assertEquals(245, distance, 10); // ~245km ± 10km
-    // }
 }

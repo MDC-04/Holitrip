@@ -2,49 +2,401 @@
   {
     "departureCity": "Bordeaux",
     "arrivalCity": "Paris",
-    "departureDateTime": "2025-01-15T08:00:00",
-    "arrivalDateTime": "2025-01-15T10:30:00",
+    "departureDateTime": "2026-02-10T08:00:00",
+    "arrivalDateTime": "2026-02-10T10:00:00",
     "mode": "TRAIN",
-    "price": 85.0
+    "price": 80.0
   },
   {
     "departureCity": "Bordeaux",
     "arrivalCity": "Paris",
-    "departureDateTime": "2025-01-15T14:00:00",
-    "arrivalDateTime": "2025-01-15T15:30:00",
+    "departureDateTime": "2026-02-10T09:00:00",
+    "arrivalDateTime": "2026-02-10T10:30:00",
     "mode": "PLANE",
     "price": 120.0
   },
   {
-    "departureCity": "Bordeaux",
-    "arrivalCity": "Toulouse",
-    "departureDateTime": "2025-01-15T09:00:00",
-    "arrivalDateTime": "2025-01-15T12:00:00",
-    "mode": "TRAIN",
-    "price": 35.0
-  },
-  {
-    "departureCity": "Bordeaux",
-    "arrivalCity": "Biarritz",
-    "departureDateTime": "2025-01-15T13:00:00",
-    "arrivalDateTime": "2025-01-15T14:30:00",
-    "mode": "TRAIN",
-    "price": 20.0
-  },
-  {
     "departureCity": "Paris",
-    "arrivalCity": "Nantes",
-    "departureDateTime": "2025-01-15T11:00:00",
-    "arrivalDateTime": "2025-01-15T15:30:00",
+    "arrivalCity": "Bordeaux",
+    "departureDateTime": "2026-02-13T18:00:00",
+    "arrivalDateTime": "2026-02-13T20:00:00",
     "mode": "TRAIN",
     "price": 75.0
   },
   {
     "departureCity": "Paris",
-    "arrivalCity": "Lyon",
-    "departureDateTime": "2025-01-15T12:00:00",
-    "arrivalDateTime": "2025-01-15T14:00:00",
+    "arrivalCity": "Bordeaux",
+    "departureDateTime": "2026-02-13T19:30:00",
+    "arrivalDateTime": "2026-02-13T21:00:00",
+    "mode": "PLANE",
+    "price": 110.0
+  },
+  {
+    "departureCity": "Bordeaux",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-10T14:30:00",
+    "arrivalDateTime": "2026-02-10T16:30:00",
+    "mode": "TRAIN",
+    "price": 65.0
+  },
+  {
+    "departureCity": "Bordeaux",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-10T16:00:00",
+    "arrivalDateTime": "2026-02-10T17:30:00",
     "mode": "PLANE",
     "price": 95.0
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Lyon",
+    "departureDateTime": "2026-02-10T07:30:00",
+    "arrivalDateTime": "2026-02-10T09:30:00",
+    "mode": "TRAIN",
+    "price": 55.0
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Lyon",
+    "departureDateTime": "2026-02-10T10:00:00",
+    "arrivalDateTime": "2026-02-10T11:00:00",
+    "mode": "PLANE",
+    "price": 85.0
+  },
+  {
+    "departureCity": "Lyon",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-13T17:00:00",
+    "arrivalDateTime": "2026-02-13T19:00:00",
+    "mode": "TRAIN",
+    "price": 60.0
+  },
+  {
+    "departureCity": "Lyon",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-15T17:00:00",
+    "arrivalDateTime": "2026-02-15T19:00:00",
+    "mode": "TRAIN",
+    "price": 60.0
+  },
+  {
+    "departureCity": "Lyon",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-13T20:00:00",
+    "arrivalDateTime": "2026-02-13T21:00:00",
+    "mode": "PLANE",
+    "price": 90.0
+  },
+  {
+    "departureCity": "Lyon",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-14T20:00:00",
+    "arrivalDateTime": "2026-02-14T21:00:00",
+    "mode": "PLANE",
+    "price": 90.0
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Marseille",
+    "departureDateTime": "2026-02-10T06:45:00",
+    "arrivalDateTime": "2026-02-10T10:15:00",
+    "mode": "TRAIN",
+    "price": 70.0
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Marseille",
+    "departureDateTime": "2026-02-10T11:30:00",
+    "arrivalDateTime": "2026-02-10T12:50:00",
+    "mode": "PLANE",
+    "price": 105.0
+  },
+  {
+    "departureCity": "Marseille",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-13T16:00:00",
+    "arrivalDateTime": "2026-02-13T19:30:00",
+    "mode": "TRAIN",
+    "price": 68.0
+  },
+  {
+    "departureCity": "Marseille",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-13T18:15:00",
+    "arrivalDateTime": "2026-02-13T19:35:00",
+    "mode": "PLANE",
+    "price": 100.0
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Toulouse",
+    "departureDateTime": "2026-02-10T08:15:00",
+    "arrivalDateTime": "2026-02-10T12:45:00",
+    "mode": "TRAIN",
+    "price": 90.0
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Toulouse",
+    "departureDateTime": "2026-02-10T10:30:00",
+    "arrivalDateTime": "2026-02-10T11:50:00",
+    "mode": "PLANE",
+    "price": 130.0
+  },
+  {
+    "departureCity": "Toulouse",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-13T19:00:00",
+    "arrivalDateTime": "2026-02-13T23:30:00",
+    "mode": "TRAIN",
+    "price": 85.0
+  },
+  {
+    "departureCity": "Toulouse",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-13T20:00:00",
+    "arrivalDateTime": "2026-02-13T21:20:00",
+    "mode": "PLANE",
+    "price": 125.0
+  },
+  {
+    "departureCity": "Bordeaux",
+    "arrivalCity": "Lyon",
+    "departureDateTime": "2026-02-10T09:00:00",
+    "arrivalDateTime": "2026-02-10T14:30:00",
+    "mode": "TRAIN",
+    "price": 95.0
+  },
+  {
+    "departureCity": "Lyon",
+    "arrivalCity": "Bordeaux",
+    "departureDateTime": "2026-02-13T15:30:00",
+    "arrivalDateTime": "2026-02-13T21:00:00",
+    "mode": "TRAIN",
+    "price": 90.0
+  },
+  {
+    "departureCity": "Lyon",
+    "arrivalCity": "Marseille",
+    "departureDateTime": "2026-02-10T08:00:00",
+    "arrivalDateTime": "2026-02-10T09:45:00",
+    "mode": "TRAIN",
+    "price": 40.0
+  },
+  {
+    "departureCity": "Marseille",
+    "arrivalCity": "Lyon",
+    "departureDateTime": "2026-02-13T17:30:00",
+    "arrivalDateTime": "2026-02-13T19:15:00",
+    "mode": "TRAIN",
+    "price": 42.0
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Nice",
+    "departureDateTime": "2026-02-10T12:00:00",
+    "arrivalDateTime": "2026-02-10T13:30:00",
+    "mode": "PLANE",
+    "price": 150.0
+  },
+  {
+    "departureCity": "Nice",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-13T16:00:00",
+    "arrivalDateTime": "2026-02-13T17:30:00",
+    "mode": "PLANE",
+    "price": 145.0
+  },
+  {
+    "departureCity": "Bordeaux",
+    "arrivalCity": "Toulouse",
+    "departureDateTime": "2026-02-10T10:00:00",
+    "arrivalDateTime": "2026-02-10T12:30:00",
+    "mode": "TRAIN",
+    "price": 45.0
+  },
+  {
+    "departureCity": "Toulouse",
+    "arrivalCity": "Bordeaux",
+    "departureDateTime": "2026-02-13T14:00:00",
+    "arrivalDateTime": "2026-02-13T16:30:00",
+    "mode": "TRAIN",
+    "price": 45.0
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Tours",
+    "departureDateTime": "2026-02-10T09:00:00",
+    "arrivalDateTime": "2026-02-10T10:00:00",
+    "mode": "TRAIN",
+    "price": 35.0
+  },
+  {
+    "departureCity": "Tours",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-13T18:00:00",
+    "arrivalDateTime": "2026-02-13T19:00:00",
+    "mode": "TRAIN",
+    "price": 35.0
+  },
+  {
+    "departureCity": "Lyon",
+    "arrivalCity": "Nice",
+    "departureDateTime": "2026-02-10T11:00:00",
+    "arrivalDateTime": "2026-02-10T15:30:00",
+    "mode": "TRAIN",
+    "price": 65.0
+  },
+  {
+    "departureCity": "Nice",
+    "arrivalCity": "Lyon",
+    "departureDateTime": "2026-02-13T13:30:00",
+    "arrivalDateTime": "2026-02-13T18:00:00",
+    "mode": "TRAIN",
+    "price": 65.0
+  },
+  {
+    "departureCity": "Marseille",
+    "arrivalCity": "Toulouse",
+    "departureDateTime": "2026-02-10T08:30:00",
+    "arrivalDateTime": "2026-02-10T12:30:00",
+    "mode": "TRAIN",
+    "price": 55.0
+  },
+  {
+    "departureCity": "Toulouse",
+    "arrivalCity": "Marseille",
+    "departureDateTime": "2026-02-13T16:00:00",
+    "arrivalDateTime": "2026-02-13T20:00:00",
+    "mode": "TRAIN",
+    "price": 55.0
+  },
+  {
+    "departureCity": "Bordeaux",
+    "arrivalCity": "Tours",
+    "departureDateTime": "2026-02-10T07:30:00",
+    "arrivalDateTime": "2026-02-10T09:30:00",
+    "mode": "TRAIN",
+    "price": 50.0
+  },
+  {
+    "departureCity": "Tours",
+    "arrivalCity": "Bordeaux",
+    "departureDateTime": "2026-02-13T15:00:00",
+    "arrivalDateTime": "2026-02-13T17:00:00",
+    "mode": "TRAIN",
+    "price": 50.0
+  },
+  {
+    "departureCity": "Toulouse",
+    "arrivalCity": "Nice",
+    "departureDateTime": "2026-02-10T09:30:00",
+    "arrivalDateTime": "2026-02-10T11:00:00",
+    "mode": "PLANE",
+    "price": 140.0
+  },
+  {
+    "departureCity": "Toulouse",
+    "arrivalCity": "Nice",
+    "departureDateTime": "2026-02-10T14:00:00",
+    "arrivalDateTime": "2026-02-10T19:30:00",
+    "mode": "TRAIN",
+    "price": 85.0
+  },
+  {
+    "departureCity": "Nice",
+    "arrivalCity": "Toulouse",
+    "departureDateTime": "2026-02-15T10:00:00",
+    "arrivalDateTime": "2026-02-15T11:30:00",
+    "mode": "PLANE",
+    "price": 135.0
+  },
+  {
+    "departureCity": "Nice",
+    "arrivalCity": "Toulouse",
+    "departureDateTime": "2026-02-15T15:00:00",
+    "arrivalDateTime": "2026-02-15T20:30:00",
+    "mode": "TRAIN",
+    "price": 85.0
+  },
+    {
+    "departureCity": "Tours",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-10T08:00:00",
+    "arrivalDateTime": "2026-02-10T09:00:00",
+    "mode": "TRAIN",
+    "price": 45
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Nice",
+    "departureDateTime": "2026-02-10T10:00:00",
+    "arrivalDateTime": "2026-02-10T11:30:00",
+    "mode": "PLANE",
+    "price": 120
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Nice",
+    "departureDateTime": "2026-02-10T10:30:00",
+    "arrivalDateTime": "2026-02-10T16:30:00",
+    "mode": "TRAIN",
+    "price": 95
+  },
+  {
+    "departureCity": "Nice",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-13T16:00:00",
+    "arrivalDateTime": "2026-02-13T17:30:00",
+    "mode": "PLANE",
+    "price": 115
+  },
+  {
+    "departureCity": "Nice",
+    "arrivalCity": "Paris",
+    "departureDateTime": "2026-02-13T10:00:00",
+    "arrivalDateTime": "2026-02-13T16:00:00",
+    "mode": "TRAIN",
+    "price": 90
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Tours",
+    "departureDateTime": "2026-02-13T18:30:00",
+    "arrivalDateTime": "2026-02-13T19:30:00",
+    "mode": "TRAIN",
+    "price": 45
+  },
+  {
+    "departureCity": "Paris",
+    "arrivalCity": "Tours",
+    "departureDateTime": "2026-02-13T17:30:00",
+    "arrivalDateTime": "2026-02-13T18:30:00",
+    "mode": "TRAIN",
+    "price": 45
+  },
+  {
+    "departureCity": "Bordeaux",
+    "arrivalCity": "Toulouse",
+    "departureDateTime": "2026-02-15T08:00:00",
+    "arrivalDateTime": "2026-02-15T10:00:00",
+    "mode": "TRAIN",
+    "price": 50
+  },
+  {
+    "departureCity": "Toulouse",
+    "arrivalCity": "Marseille",
+    "departureDateTime": "2026-02-15T11:30:00",
+    "arrivalDateTime": "2026-02-15T15:00:00",
+    "mode": "TRAIN",
+    "price": 60
+  },
+  {
+    "departureCity": "Marseille",
+    "arrivalCity": "Nice",
+    "departureDateTime": "2026-02-15T16:30:00",
+    "arrivalDateTime": "2026-02-15T18:00:00",
+    "mode": "TRAIN",
+    "price": 40
   }
 ]

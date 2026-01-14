@@ -3,120 +3,417 @@
     "name": "Musée du Louvre",
     "address": "Rue de Rivoli",
     "city": "Paris",
-    "date": "2025-01-16",
+    "date": "2026-02-11",
     "category": "CULTURE",
     "price": 17.0
   },
   {
     "name": "Tour Eiffel",
-    "address": "Champ de Mars",
+    "address": "5 Avenue Anatole France",
     "city": "Paris",
-    "date": "2025-01-16",
+    "date": "2026-02-12",
     "category": "CULTURE",
     "price": 26.0
   },
   {
-    "name": "Concert Philharmonie",
-    "address": "221 Avenue Jean Jaurès",
+    "name": "Musée d'Orsay",
+    "address": "1 Rue de la Légion d'Honneur",
     "city": "Paris",
-    "date": "2025-01-16",
+    "date": "2026-02-11",
+    "category": "CULTURE",
+    "price": 16.0
+  },
+  {
+    "name": "Arc de Triomphe",
+    "address": "Place Charles de Gaulle",
+    "city": "Paris",
+    "date": "2026-02-11",
+    "category": "CULTURE",
+    "price": 0.0
+  },
+  {
+    "name": "Cathédrale Notre-Dame de Paris",
+    "address": "6 Parvis Notre-Dame",
+    "city": "Paris",
+    "date": "2026-02-12",
+    "category": "CULTURE",
+    "price": 0.0
+  },
+  {
+    "name": "Musée Rodin",
+    "address": "77 Rue de Varenne",
+    "city": "Paris",
+    "date": "2026-02-13",
+    "category": "CULTURE",
+    "price": 13.0
+  },
+  {
+    "name": "Sainte-Chapelle",
+    "address": "8 Boulevard du Palais",
+    "city": "Paris",
+    "date": "2026-02-11",
+    "category": "CULTURE",
+    "price": 11.5
+  },
+  {
+    "name": "Centre Pompidou",
+    "address": "Place Georges-Pompidou",
+    "city": "Paris",
+    "date": "2026-02-12",
+    "category": "CULTURE",
+    "price": 15.0
+  },
+  {
+    "name": "Palais Garnier - Opéra",
+    "address": "Place de l'Opéra",
+    "city": "Paris",
+    "date": "2026-02-11",
     "category": "MUSIC",
-    "price": 45.0
+    "price": 75.0
   },
   {
-    "name": "Restaurant Le Jules Verne",
-    "address": "Avenue Gustave Eiffel",
+    "name": "Concert Jazz au New Morning",
+    "address": "7 Rue des Petites Écuries",
     "city": "Paris",
-    "date": "2025-01-17",
-    "category": "FOOD",
-    "price": 95.0
+    "date": "2026-02-12",
+    "category": "MUSIC",
+    "price": 30.0
   },
   {
-    "name": "Musée des Confluences",
+    "name": "Panthéon",
+    "address": "Place du Panthéon",
+    "city": "Paris",
+    "date": "2026-02-13",
+    "category": "CULTURE",
+    "price": 11.5
+  },
+  {
+    "name": "Jardin du Luxembourg",
+    "address": "Rue de Médicis",
+    "city": "Paris",
+    "date": "2026-02-11",
+    "category": "SPORT",
+    "price": 0.0
+  },
+  {
+    "name": "Vélib Paris Tour",
+    "address": "Place de la Concorde",
+    "city": "Paris",
+    "date": "2026-02-12",
+    "category": "SPORT",
+    "price": 5.0
+  },
+  {
+    "name": "Croisière sur la Seine",
+    "address": "Port de la Bourdonnais",
+    "city": "Paris",
+    "date": "2026-02-12",
+    "category": "TOURISM",
+    "price": 15.0
+  },
+  {
+    "name": "Montmartre et Sacré-Cœur",
+    "address": "35 Rue du Chevalier de la Barre",
+    "city": "Paris",
+    "date": "2026-02-13",
+    "category": "CULTURE",
+    "price": 0.0
+  },
+  {
+    "name": "Musée de l'Orangerie",
+    "address": "Jardin des Tuileries",
+    "city": "Paris",
+    "date": "2026-02-11",
+    "category": "CULTURE",
+    "price": 12.5
+  },
+  {
+    "name": "Aquarium de Paris",
+    "address": "5 Avenue Albert de Mun",
+    "city": "Paris",
+    "date": "2026-02-12",
+    "category": "FAMILY",
+    "price": 22.5
+  },
+  {
+    "name": "Parc Astérix",
+    "address": "Route départementale 924",
+    "city": "Paris",
+    "date": "2026-02-13",
+    "category": "FAMILY",
+    "price": 57.0
+  },
+  {
+    "name": "Lyon Free Sport",
+    "address": "Parc de la Tête d'Or",
+    "city": "Lyon",
+    "date": "2026-02-11",
+    "category": "SPORT",
+    "price": 0.0
+  },
+  {
+    "name": "Musée des Confluences Lyon",
     "address": "86 Quai Perrache",
     "city": "Lyon",
-    "date": "2025-01-16",
+    "date": "2026-02-12",
     "category": "CULTURE",
     "price": 9.0
   },
   {
-    "name": "Parc de la Tête d'Or",
-    "address": "Place Général Leclerc",
+    "name": "Musée des Confluences Lyon",
+    "address": "86 Quai Perrache",
     "city": "Lyon",
-    "date": "2025-01-16",
-    "category": "SPORT",
+    "date": "2026-02-13",
+    "category": "CULTURE",
+    "price": 9.0
+  },
+  {
+    "name": "Vieux Lyon et Traboules",
+    "address": "Rue Saint-Jean",
+    "city": "Lyon",
+    "date": "2026-02-11",
+    "category": "CULTURE",
     "price": 0.0
+  },
+  {
+    "name": "Basilique Notre-Dame de Fourvière",
+    "address": "8 Place de Fourvière",
+    "city": "Lyon",
+    "date": "2026-02-12",
+    "category": "CULTURE",
+    "price": 0.0
+  },
+  {
+    "name": "Musée des Beaux-Arts Lyon",
+    "address": "20 Place des Terreaux",
+    "city": "Lyon",
+    "date": "2026-02-13",
+    "category": "CULTURE",
+    "price": 8.0
+  },
+  {
+    "name": "Festival Lumière Lyon",
+    "address": "Institut Lumière",
+    "city": "Lyon",
+    "date": "2026-02-11",
+    "category": "CULTURE",
+    "price": 12.0
   },
   {
     "name": "Opéra de Lyon",
     "address": "1 Place de la Comédie",
     "city": "Lyon",
-    "date": "2025-01-17",
+    "date": "2026-02-12",
     "category": "MUSIC",
-    "price": 55.0
-  },
-  {
-    "name": "Bouchon Lyonnais",
-    "address": "Rue Mercière",
-    "city": "Lyon",
-    "date": "2025-01-17",
-    "category": "FOOD",
-    "price": 35.0
-  },
-  {
-    "name": "Cité de l'Espace",
-    "address": "Avenue Jean Gonord",
-    "city": "Toulouse",
-    "date": "2025-01-16",
-    "category": "CULTURE",
-    "price": 28.0
-  },
-  {
-    "name": "Stade Toulousain Match",
-    "address": "114 Rue des Troènes",
-    "city": "Toulouse",
-    "date": "2025-01-16",
-    "category": "SPORT",
-    "price": 40.0
-  },
-  {
-    "name": "Cité de la Mer",
-    "address": "Gare Maritime Transatlantique",
-    "city": "Bordeaux",
-    "date": "2025-01-16",
-    "category": "CULTURE",
-    "price": 19.0
-  },
-  {
-    "name": "Dégustation Vin",
-    "address": "Quai des Chartrons",
-    "city": "Bordeaux",
-    "date": "2025-01-16",
-    "category": "FOOD",
-    "price": 50.0
-  },
-  {
-    "name": "Calanques en Kayak",
-    "address": "Port des Goudes",
-    "city": "Marseille",
-    "date": "2025-01-16",
-    "category": "SPORT",
     "price": 45.0
   },
   {
-    "name": "MuCEM",
-    "address": "Esplanade du J4",
+    "name": "Marché de Noël Lyon",
+    "address": "Place Carnot",
+    "city": "Lyon",
+    "date": "2026-02-11",
+    "category": "TOURISM",
+    "price": 0.0
+  },
+  
+  {
+    "name": "Calanques de Marseille Randonnée",
+    "address": "Chemin de Sormiou",
     "city": "Marseille",
-    "date": "2025-01-17",
+    "date": "2026-02-11",
+    "category": "SPORT",
+    "price": 0.0
+  },
+  {
+    "name": "Vieux-Port de Marseille",
+    "address": "Quai des Belges",
+    "city": "Marseille",
+    "date": "2026-02-12",
+    "category": "TOURISM",
+    "price": 0.0
+  },
+  {
+    "name": "MuCEM Marseille",
+    "address": "7 Promenade Robert Laffont",
+    "city": "Marseille",
+    "date": "2026-02-11",
     "category": "CULTURE",
     "price": 11.0
   },
   {
-    "name": "Bouillabaisse Chez Fonfon",
-    "address": "140 Rue du Vallon des Auffes",
+    "name": "Basilique Notre-Dame de la Garde",
+    "address": "Rue Fort du Sanctuaire",
     "city": "Marseille",
-    "date": "2025-01-17",
-    "category": "FOOD",
-    "price": 65.0
+    "date": "2026-02-12",
+    "category": "CULTURE",
+    "price": 0.0
+  },
+  {
+    "name": "Château d'If",
+    "address": "Île d'If",
+    "city": "Marseille",
+    "date": "2026-02-13",
+    "category": "CULTURE",
+    "price": 6.0
+  },
+  {
+    "name": "Stade Vélodrome Visite",
+    "address": "3 Boulevard Michelet",
+    "city": "Marseille",
+    "date": "2026-02-11",
+    "category": "SPORT",
+    "price": 12.0
+  },
+  {
+    "name": "Cité de l'Espace Toulouse",
+    "address": "Avenue Jean Gonord",
+    "city": "Toulouse",
+    "date": "2026-02-11",
+    "category": "CULTURE",
+    "price": 28.0
+  },
+  {
+    "name": "Basilique Saint-Sernin Toulouse",
+    "address": "Place Saint-Sernin",
+    "city": "Toulouse",
+    "date": "2026-02-12",
+    "category": "CULTURE",
+    "price": 0.0
+  },
+  {
+    "name": "Canal du Midi en Vélo",
+    "address": "Port de l'Embouchure",
+    "city": "Toulouse",
+    "date": "2026-02-11",
+    "category": "SPORT",
+    "price": 10.0
+  },
+  {
+    "name": "Musée des Augustins Toulouse",
+    "address": "21 Rue de Metz",
+    "city": "Toulouse",
+    "date": "2026-02-13",
+    "category": "CULTURE",
+    "price": 5.0
+  },
+  {
+    "name": "Capitole de Toulouse",
+    "address": "Place du Capitole",
+    "city": "Toulouse",
+    "date": "2026-02-12",
+    "category": "CULTURE",
+    "price": 0.0
+  },
+  {
+    "name": "Promenade des Anglais Vélo",
+    "address": "Promenade des Anglais",
+    "city": "Nice",
+    "date": "2026-02-11",
+    "category": "SPORT",
+    "price": 8.0
+  },
+  {
+    "name": "Musée Matisse Nice",
+    "address": "164 Avenue des Arènes de Cimiez",
+    "city": "Nice",
+    "date": "2026-02-12",
+    "category": "CULTURE",
+    "price": 10.0
+  },
+  {
+    "name": "Vieux Nice et Cours Saleya",
+    "address": "Cours Saleya",
+    "city": "Nice",
+    "date": "2026-02-11",
+    "category": "TOURISM",
+    "price": 0.0
+  },
+  {
+    "name": "Château de Nice Randonnée",
+    "address": "Montée du Château",
+    "city": "Nice",
+    "date": "2026-02-12",
+    "category": "SPORT",
+    "price": 0.0
+  },
+  {
+    "name": "Opéra de Nice",
+    "address": "4 Rue Saint-François de Paule",
+    "city": "Nice",
+    "date": "2026-02-13",
+    "category": "MUSIC",
+    "price": 40.0
+  },
+  {
+    "name": "Cathédrale Saint-André Bordeaux",
+    "address": "Place Pey Berland",
+    "city": "Bordeaux",
+    "date": "2026-02-11",
+    "category": "CULTURE",
+    "price": 0.0
+  },
+  {
+    "name": "Cité du Vin Bordeaux",
+    "address": "1 Esplanade de Pontac",
+    "city": "Bordeaux",
+    "date": "2026-02-12",
+    "category": "CULTURE",
+    "price": 22.0
+  },
+  {
+    "name": "Miroir d'Eau",
+    "address": "Place de la Bourse",
+    "city": "Bordeaux",
+    "date": "2026-02-11",
+    "category": "TOURISM",
+    "price": 0.0
+  },
+  {
+    "name": "Grand Théâtre de Bordeaux",
+    "address": "Place de la Comédie",
+    "city": "Bordeaux",
+    "date": "2026-02-13",
+    "category": "MUSIC",
+    "price": 35.0
+  },
+  {
+    "name": "Musée d'Aquitaine",
+    "address": "20 Cours Pasteur",
+    "city": "Bordeaux",
+    "date": "2026-02-12",
+    "category": "CULTURE",
+    "price": 5.0
+  },
+  {
+    "name": "Château de Tours",
+    "address": "25 Avenue André Malraux",
+    "city": "Tours",
+    "date": "2026-02-11",
+    "category": "CULTURE",
+    "price": 7.0
+  },
+  {
+    "name": "Cathédrale Saint-Gatien Tours",
+    "address": "Place de la Cathédrale",
+    "city": "Tours",
+    "date": "2026-02-12",
+    "category": "CULTURE",
+    "price": 0.0
+  },
+  {
+    "name": "Musée des Beaux-Arts Tours",
+    "address": "18 Place François Sicard",
+    "city": "Tours",
+    "date": "2026-02-11",
+    "category": "CULTURE",
+    "price": 4.0
+  },
+  {
+    "name": "Jardin Botanique Tours",
+    "address": "35 Boulevard Tonnellé",
+    "city": "Tours",
+    "date": "2026-02-12",
+    "category": "SPORT",
+    "price": 0.0
   }
 ]

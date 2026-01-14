@@ -16,3 +16,5 @@ Thumbs.db
 # Logs
 *.log
 tp4/
+serveur/context.yaml
+serveur/todos.yaml

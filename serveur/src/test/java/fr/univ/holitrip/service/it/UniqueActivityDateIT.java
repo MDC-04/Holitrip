@@ -17,7 +17,7 @@ import fr.univ.holitrip.service.impl.JsonTransportService;
 import fr.univ.holitrip.service.impl.PackageBuilder;
 import fr.univ.holitrip.testhelpers.stubs.TestGeocodingService;
 
-public class IntegrationUniqueActivityDateIT {
+public class UniqueActivityDateIT {
     
     @Test
     void testUniqueActivityDate() {

@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test d'intégration vérifiant que la priorité DURATION sélectionne
  * le trajet le plus court (même si pas le moins cher).
  */
-class IntegrationDurationPriorityIT {
+class DurationPriorityIT {
 
     @Test
     void durationPrioritySelectsShortestTrip() {

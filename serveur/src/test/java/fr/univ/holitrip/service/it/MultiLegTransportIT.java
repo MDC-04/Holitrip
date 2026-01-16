@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class IntegrationMultiLegTransportIT {
+public class MultiLegTransportIT {
     
     @Test
     void testTwoLegTransportScenario() {

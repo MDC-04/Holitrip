@@ -398,5 +398,69 @@
     "arrivalDateTime": "2026-02-15T18:00:00",
     "mode": "TRAIN",
     "price": 40
+  },
+  {
+    "departureCity": "Lille",
+    "arrivalCity": "Bruxelles",
+    "departureDateTime": "2026-02-10T08:00:00",
+    "arrivalDateTime": "2026-02-10T10:00:00",
+    "mode": "TRAIN",
+    "price": 35.0
+  },
+  {
+    "departureCity": "Bruxelles",
+    "arrivalCity": "Eindhoven",
+    "departureDateTime": "2026-02-10T12:00:00",
+    "arrivalDateTime": "2026-02-10T14:30:00",
+    "mode": "TRAIN",
+    "price": 45.0
+  },
+  {
+    "departureCity": "Lille",
+    "arrivalCity": "Bruxelles",
+    "departureDateTime": "2026-02-18T08:00:00",
+    "arrivalDateTime": "2026-02-18T10:00:00",
+    "mode": "TRAIN",
+    "price": 35.0
+  },
+  {
+    "departureCity": "Bruxelles",
+    "arrivalCity": "Eindhoven",
+    "departureDateTime": "2026-02-18T10:45:00",
+    "arrivalDateTime": "2026-02-18T13:15:00",
+    "mode": "TRAIN",
+    "price": 45.0
+  },
+  {
+    "departureCity": "Eindhoven",
+    "arrivalCity": "Bruxelles",
+    "departureDateTime": "2026-02-13T14:00:00",
+    "arrivalDateTime": "2026-02-13T16:30:00",
+    "mode": "TRAIN",
+    "price": 45.0
+  },
+  {
+    "departureCity": "Bruxelles",
+    "arrivalCity": "Lille",
+    "departureDateTime": "2026-02-13T18:00:00",
+    "arrivalDateTime": "2026-02-13T20:00:00",
+    "mode": "TRAIN",
+    "price": 35.0
+  },
+  {
+    "departureCity": "Eindhoven",
+    "arrivalCity": "Bruxelles",
+    "departureDateTime": "2026-02-21T14:00:00",
+    "arrivalDateTime": "2026-02-21T16:30:00",
+    "mode": "TRAIN",
+    "price": 45.0
+  },
+  {
+    "departureCity": "Bruxelles",
+    "arrivalCity": "Lille",
+    "departureDateTime": "2026-02-21T18:00:00",
+    "arrivalDateTime": "2026-02-21T20:00:00",
+    "mode": "TRAIN",
+    "price": 35.0
   }
 ]

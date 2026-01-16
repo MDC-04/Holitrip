@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test d'intégration vérifiant le comportement quand le budget est insuffisant.
  * Selon les exigences, le forfait doit être retourné en l'état avec les erreurs rencontrées.
  */
-class IntegrationInsufficientBudgetIT {
+class InsufficientBudgetIT {
 
     @Test
     void insufficientBudgetReturnsEmptyOrPackageWithErrors() {

@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class IntegrationPricePriorityIT {
+public class PricePriorityIT {
 
     @Test
     public void pricePrioritySelectsCheapestTrip() {

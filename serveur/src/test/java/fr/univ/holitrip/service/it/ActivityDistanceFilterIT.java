@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test d'intégration vérifiant que les activités respectent la distance maximale
  * par rapport à l'hôtel en utilisant la vraie API de geocoding.
  */
-class IntegrationActivityDistanceFilterIT {
+class ActivityDistanceFilterIT {
 
     @Test
     void activitiesRespectMaxDistanceFilter() {

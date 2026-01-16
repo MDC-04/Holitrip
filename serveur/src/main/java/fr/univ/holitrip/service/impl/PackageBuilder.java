@@ -205,19 +205,24 @@ public class PackageBuilder implements PackageService {
         }
 
         // Find return transports (destination -> departure)
-        List<Transport> returnTransports = transportService.findTransports(destinationCity, departureCity, returnDateTime, transportMode);
+        // Note: For return trip, we don't enforce strict mode matching if outbound had a preference
+        // This allows packages where outbound is TRAIN but return is PLANE if no TRAIN available
+        List<Transport> returnTransports = transportService.findTransports(destinationCity, departureCity, returnDateTime, null);
         List<Transport> chosenReturnLegs = null;
         
         if (returnTransports != null && !returnTransports.isEmpty()) {
             // Check if return transports represent a multi-leg solution
             if (isMultiLeg(returnTransports)) {
-                // This is a multi-leg solution - validate mode and use directly
-                if (validateTransportMode(returnTransports, transportMode)) {
-                    chosenReturnLegs = returnTransports;
-                }
+                // This is a multi-leg solution - use directly without strict mode validation for return
+                chosenReturnLegs = returnTransports;
             } else {
                 // These are direct transport options - select best one
+                // Prefer transportMode if available, but accept any mode if not found
                 Transport chosen = selectBestTransport(returnTransports, transportMode, transportPriority);
+                if (chosen == null) {
+                    // If preferred mode not found, take any available transport
+                    chosen = selectBestTransport(returnTransports, null, transportPriority);
+                }
                 if (chosen != null) {
                     chosenReturnLegs = Collections.singletonList(chosen);
                 }
@@ -286,32 +291,31 @@ public class PackageBuilder implements PackageService {
         List<Activity> withinDistance = new ArrayList<>();
         if (candidateActivities != null && !candidateActivities.isEmpty()) {
             for (Activity a : candidateActivities) {
+                Coordinates activityCoord = null;
                 try {
-                    Coordinates activityCoord = null;
-                    try {
-                        if (a.getAddress() != null) {
-                            String key = (a.getAddress() + ", " + a.getCity()).toLowerCase();
-                            if (geocodeCache.containsKey(key)) {
-                                activityCoord = geocodeCache.get(key);
-                            } else {
-                                activityCoord = geocodingService.geocode(a.getAddress() + ", " + a.getCity());
-                                if (activityCoord != null) geocodeCache.put(key, activityCoord);
-                            }
+                    if (a.getAddress() != null) {
+                        String key = (a.getAddress() + ", " + a.getCity()).toLowerCase();
+                        if (geocodeCache.containsKey(key)) {
+                            activityCoord = geocodeCache.get(key);
+                        } else {
+                            activityCoord = geocodingService.geocode(a.getAddress() + ", " + a.getCity());
+                            if (activityCoord != null) geocodeCache.put(key, activityCoord);
                         }
-                    } catch (Exception ignored) {
-                        // ignore geocoding failure for this activity; we'll skip if no coords
                     }
-                    // Attempt distance calculation; allow mocks to handle nulls in tests.
-                    try {
-                        double d = distanceService.calculateDistance(hotelLocation, activityCoord);
-                        if (d <= maxDistanceKm) {
-                            withinDistance.add(a);
-                        }
-                    } catch (Exception ignored) {
-                        // if distance calculation fails, exclude activity
+                } catch (Exception ignored) {
+                    // ignore geocoding failure for this activity; we'll try distance check anyway
+                }
+                // Attempt distance calculation
+                // If hotel location is available, check distance
+                // If hotel geocoding failed (hotelLocation==null), still try with activity coords
+                try {
+                    double d = distanceService.calculateDistance(hotelLocation, activityCoord);
+                    if (d <= maxDistanceKm) {
+                        withinDistance.add(a);
                     }
                 } catch (Exception e) {
-                    // if distance or geocoding fails, exclude activity
+                    // if distance calculation fails (throws exception), exclude activity
+                    // This ensures activities are excluded when distanceService.calculateDistance throws
                 }
             }
         }

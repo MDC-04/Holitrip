@@ -15,5 +15,3 @@ Thumbs.db
 
 # Logs
 *.log
-serveur/context.yaml
-serveur/todos.yaml

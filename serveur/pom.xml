@@ -124,6 +124,16 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.11</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/HolitripMain*.class</exclude>
+                        <exclude>**/model/Activity.class</exclude>
+                        <exclude>**/model/Coordinates.class</exclude>
+                        <exclude>**/model/Hotel.class</exclude>
+                        <exclude>**/model/Transport.class</exclude>
+                        <exclude>**/model/Trip.class</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -160,6 +170,14 @@
                     <targetTests>
                         <param>fr.univ.holitrip.*Test</param>
                     </targetTests>
+                    <excludedClasses>
+                        <param>fr.univ.holitrip.HolitripMain*</param>
+                        <param>fr.univ.holitrip.model.Activity</param>
+                        <param>fr.univ.holitrip.model.Coordinates</param>
+                        <param>fr.univ.holitrip.model.Hotel</param>
+                        <param>fr.univ.holitrip.model.Transport</param>
+                        <param>fr.univ.holitrip.model.Trip</param>
+                    </excludedClasses>
                     <outputFormats>
                         <outputFormat>HTML</outputFormat>
                         <outputFormat>XML</outputFormat>

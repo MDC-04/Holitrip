@@ -392,9 +392,10 @@ public class PackageBuilder implements PackageService {
             // if we cannot validate times, be permissive and continue
         }
 
-        // Enforce overall budget: if total price exceeds maxBudget, return empty list
-        if (pkg.getTotalPrice(tripDurationDays) > maxBudget) {
-            return Collections.emptyList();
+        // Check overall budget: if total price exceeds maxBudget, add error but still return package
+        double totalPrice = pkg.getTotalPrice(tripDurationDays);
+        if (totalPrice > maxBudget) {
+            pkg.addError("Budget exceeded: total price " + totalPrice + " exceeds maximum budget " + maxBudget);
         }
 
         return Collections.singletonList(pkg);

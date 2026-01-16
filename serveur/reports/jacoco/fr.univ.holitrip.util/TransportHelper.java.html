@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransportHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Holitrip</a> &gt; <a href="index.source.html" class="el_package">fr.univ.holitrip.util</a> &gt; <span class="el_source">TransportHelper.java</span></div><h1>TransportHelper.java</h1><pre class="source lang-java linenums">package fr.univ.holitrip.util;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import fr.univ.holitrip.model.Transport;
+
+/**
+ * Utility class providing helper methods for transport selection and validation.
+ */
+public class TransportHelper {
+
+    private TransportHelper() {
+        // Utility class - prevent instantiation
+    }
+
+    /**
+     * Calculate the duration of a transport in minutes.
+     * Returns Long.MAX_VALUE if dates are missing or invalid.
+     */
+    public static long transportDurationMinutes(Transport t) {
+<span class="pc bpc" id="L23" title="1 of 6 branches missed.">        if (t == null || t.getDepartureDateTime() == null || t.getArrivalDateTime() == null) {</span>
+<span class="fc" id="L24">            return Long.MAX_VALUE;</span>
+        }
+        try {
+<span class="fc" id="L27">            return java.time.Duration.between(t.getDepartureDateTime(), t.getArrivalDateTime()).toMinutes();</span>
+<span class="nc" id="L28">        } catch (Exception e) {</span>
+<span class="nc" id="L29">            return Long.MAX_VALUE;</span>
+        }
+    }
+
+    /**
+     * Check if a list of transports represents a multi-leg journey.
+     * A multi-leg journey has at least 2 transports where each arrival city
+     * matches the next departure city.
+     */
+    public static boolean isMultiLeg(List&lt;Transport&gt; transports) {
+<span class="fc bfc" id="L39" title="All 4 branches covered.">        if (transports == null || transports.size() &lt; 2) {</span>
+<span class="fc" id="L40">            return false;</span>
+        }
+        
+        // Verify continuity: each transport's arrival city = next transport's departure city
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        for (int i = 0; i &lt; transports.size() - 1; i++) {</span>
+<span class="fc" id="L45">            Transport current = transports.get(i);</span>
+<span class="fc" id="L46">            Transport next = transports.get(i + 1);</span>
+<span class="pc bpc" id="L47" title="1 of 4 branches missed.">            if (current == null || next == null) {</span>
+<span class="fc" id="L48">                return false;</span>
+            }
+<span class="fc bfc" id="L50" title="All 4 branches covered.">            if (current.getArrivalCity() == null || !current.getArrivalCity().equals(next.getDepartureCity())) {</span>
+<span class="fc" id="L51">                return false;</span>
+            }
+        }
+<span class="fc" id="L54">        return true;</span>
+    }
+
+    /**
+     * Validate that all transports in a list match the preferred transport mode.
+     * Returns true if no preferred mode is specified or if mode info is unavailable.
+     */
+    public static boolean validateTransportMode(List&lt;Transport&gt; transports, String preferredMode) {
+<span class="fc bfc" id="L62" title="All 4 branches covered.">        if (transports == null || transports.isEmpty()) {</span>
+<span class="fc" id="L63">            return false;</span>
+        }
+<span class="fc bfc" id="L65" title="All 4 branches covered.">        if (preferredMode == null || preferredMode.isBlank()) {</span>
+<span class="fc" id="L66">            return true;</span>
+        }
+        
+        // Check if any transport has mode information
+<span class="fc" id="L70">        boolean anyWithMode = transports.stream()</span>
+<span class="pc bpc" id="L71" title="2 of 6 branches missed.">                .anyMatch(t -&gt; t != null &amp;&amp; t.getMode() != null &amp;&amp; !t.getMode().isBlank());</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (!anyWithMode) {</span>
+<span class="fc" id="L73">            return true; // No mode info available -&gt; permissive</span>
+        }
+        
+        // All transports must match preferred mode
+<span class="fc" id="L77">        return transports.stream()</span>
+<span class="pc bpc" id="L78" title="2 of 6 branches missed.">                .allMatch(t -&gt; t != null &amp;&amp; t.getMode() != null &amp;&amp; preferredMode.equalsIgnoreCase(t.getMode()));</span>
+    }
+
+    /**
+     * Select the best transport from a list based on mode filter and priority.
+     * 
+     * @param list List of available transports
+     * @param preferredMode Transport mode to filter by (e.g., &quot;TRAIN&quot;, &quot;PLANE&quot;)
+     * @param priority Selection priority: &quot;PRICE&quot; for cheapest, &quot;DURATION&quot;/&quot;TIME&quot; for fastest
+     * @return Best matching transport, or null if none found
+     */
+    public static Transport selectBestTransport(List&lt;Transport&gt; list, String preferredMode, String priority) {
+<span class="fc bfc" id="L90" title="All 4 branches covered.">        if (list == null || list.isEmpty()) {</span>
+<span class="fc" id="L91">            return null;</span>
+        }
+        
+        // If preferredMode provided, prefer transports with that mode
+<span class="fc" id="L95">        List&lt;Transport&gt; candidates = list;</span>
+<span class="pc bpc" id="L96" title="1 of 4 branches missed.">        if (preferredMode != null &amp;&amp; !preferredMode.isBlank()) {</span>
+<span class="fc" id="L97">            List&lt;Transport&gt; filtered = list.stream()</span>
+<span class="pc bpc" id="L98" title="1 of 4 branches missed.">                    .filter(t -&gt; t != null &amp;&amp; preferredMode.equalsIgnoreCase(t.getMode()))</span>
+<span class="fc" id="L99">                    .collect(Collectors.toList());</span>
+<span class="fc" id="L100">            boolean anyWithMode = list.stream()</span>
+<span class="pc bpc" id="L101" title="2 of 6 branches missed.">                    .anyMatch(t -&gt; t != null &amp;&amp; t.getMode() != null &amp;&amp; !t.getMode().isBlank());</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            if (filtered.isEmpty()) {</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">                if (anyWithMode) {</span>
+<span class="fc" id="L104">                    return null; // Mode info exists but none matched -&gt; enforce strictness</span>
+                } else {
+<span class="fc" id="L106">                    candidates = list; // No mode info available -&gt; don't enforce strictness</span>
+                }
+            } else {
+<span class="fc" id="L109">                candidates = filtered;</span>
+            }
+        }
+
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (&quot;PRICE&quot;.equalsIgnoreCase(priority)) {</span>
+<span class="fc" id="L114">            return candidates.stream()</span>
+<span class="fc" id="L115">                    .min(Comparator.comparingDouble(Transport::getPrice)</span>
+<span class="fc" id="L116">                            .thenComparingLong(TransportHelper::transportDurationMinutes))</span>
+<span class="fc" id="L117">                    .orElse(candidates.get(0));</span>
+<span class="fc bfc" id="L118" title="All 4 branches covered.">        } else if (&quot;DURATION&quot;.equalsIgnoreCase(priority) || &quot;TIME&quot;.equalsIgnoreCase(priority)) {</span>
+<span class="fc" id="L119">            return candidates.stream()</span>
+<span class="fc" id="L120">                    .min(Comparator.comparingLong(TransportHelper::transportDurationMinutes)</span>
+<span class="fc" id="L121">                            .thenComparingDouble(Transport::getPrice))</span>
+<span class="fc" id="L122">                    .orElse(candidates.get(0));</span>
+        }
+<span class="fc" id="L124">        return candidates.get(0);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

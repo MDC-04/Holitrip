@@ -1,0 +1,2360 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>TransportHelper.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package fr.univ.holitrip.util;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Comparator;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.List;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.stream.Collectors;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import fr.univ.holitrip.model.Transport;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * Utility class providing helper methods for transport selection and validation.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class TransportHelper {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>    private TransportHelper() {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Utility class - prevent instantiation</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Calculate the duration of a transport in minutes.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Returns Long.MAX_VALUE if dates are missing or invalid.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static long transportDurationMinutes(Transport t) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_23'/>
+23
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_23'>3</a>
+<span>
+1. transportDurationMinutes : negated conditional &rarr; KILLED<br/>
+2. transportDurationMinutes : negated conditional &rarr; KILLED<br/>
+3. transportDurationMinutes : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (t == null || t.getDepartureDateTime() == null || t.getArrivalDateTime() == null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_24'/>
+24
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_24'>1</a>
+<span>
+1. transportDurationMinutes : replaced long return with 0 for fr/univ/holitrip/util/TransportHelper::transportDurationMinutes &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return Long.MAX_VALUE;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        try {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_27'/>
+27
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_27'>1</a>
+<span>
+1. transportDurationMinutes : replaced long return with 0 for fr/univ/holitrip/util/TransportHelper::transportDurationMinutes &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return java.time.Duration.between(t.getDepartureDateTime(), t.getArrivalDateTime()).toMinutes();</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>        } catch (Exception e) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_29'/>
+29
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_29'>1</a>
+<span>
+1. transportDurationMinutes : replaced long return with 0 for fr/univ/holitrip/util/TransportHelper::transportDurationMinutes &rarr; NO_COVERAGE<br/>
+
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>            return Long.MAX_VALUE;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Check if a list of transports represents a multi-leg journey.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * A multi-leg journey has at least 2 transports where each arrival city</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * matches the next departure city.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static boolean isMultiLeg(List&#60;Transport&#62; transports) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_39'/>
+39
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_39'>3</a>
+<span>
+1. isMultiLeg : negated conditional &rarr; KILLED<br/>
+2. isMultiLeg : negated conditional &rarr; KILLED<br/>
+3. isMultiLeg : changed conditional boundary &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (transports == null || transports.size() &#60; 2) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_40'/>
+40
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_40'>1</a>
+<span>
+1. isMultiLeg : replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::isMultiLeg &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return false;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        </span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Verify continuity: each transport&#39;s arrival city = next transport&#39;s departure city</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_44'/>
+44
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_44'>3</a>
+<span>
+1. isMultiLeg : negated conditional &rarr; KILLED<br/>
+2. isMultiLeg : changed conditional boundary &rarr; KILLED<br/>
+3. isMultiLeg : Replaced integer subtraction with addition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        for (int i = 0; i &#60; transports.size() - 1; i++) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            Transport current = transports.get(i);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_46'/>
+46
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_46'>1</a>
+<span>
+1. isMultiLeg : Replaced integer addition with subtraction &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            Transport next = transports.get(i + 1);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_47'/>
+47
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_47'>2</a>
+<span>
+1. isMultiLeg : negated conditional &rarr; KILLED<br/>
+2. isMultiLeg : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            if (current == null || next == null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_48'/>
+48
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_48'>1</a>
+<span>
+1. isMultiLeg : replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::isMultiLeg &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                return false;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_50'/>
+50
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_50'>2</a>
+<span>
+1. isMultiLeg : negated conditional &rarr; KILLED<br/>
+2. isMultiLeg : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            if (current.getArrivalCity() == null || !current.getArrivalCity().equals(next.getDepartureCity())) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_51'/>
+51
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_51'>1</a>
+<span>
+1. isMultiLeg : replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::isMultiLeg &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                return false;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_54'/>
+54
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_54'>1</a>
+<span>
+1. isMultiLeg : replaced boolean return with false for fr/univ/holitrip/util/TransportHelper::isMultiLeg &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return true;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_55'/>
+55
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_55'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_56'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Validate that all transports in a list match the preferred transport mode.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Returns true if no preferred mode is specified or if mode info is unavailable.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static boolean validateTransportMode(List&#60;Transport&#62; transports, String preferredMode) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_62'/>
+62
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_62'>2</a>
+<span>
+1. validateTransportMode : negated conditional &rarr; KILLED<br/>
+2. validateTransportMode : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (transports == null || transports.isEmpty()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_63'/>
+63
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_63'>1</a>
+<span>
+1. validateTransportMode : replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::validateTransportMode &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return false;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_64'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_65'/>
+65
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_65'>2</a>
+<span>
+1. validateTransportMode : negated conditional &rarr; KILLED<br/>
+2. validateTransportMode : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (preferredMode == null || preferredMode.isBlank()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_66'/>
+66
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_66'>1</a>
+<span>
+1. validateTransportMode : replaced boolean return with false for fr/univ/holitrip/util/TransportHelper::validateTransportMode &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return true;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_67'/>
+67
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_67'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_68'/>
+68
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_68'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        </span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_69'/>
+69
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_69'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Check if any transport has mode information</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_70'/>
+70
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_70'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        boolean anyWithMode = transports.stream()</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_71'/>
+71
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_71'>4</a>
+<span>
+1. lambda$validateTransportMode$0 : replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::lambda$validateTransportMode$0 &rarr; KILLED<br/>
+2. lambda$validateTransportMode$0 : negated conditional &rarr; KILLED<br/>
+3. lambda$validateTransportMode$0 : negated conditional &rarr; KILLED<br/>
+4. lambda$validateTransportMode$0 : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                .anyMatch(t -&#62; t != null &#38;&#38; t.getMode() != null &#38;&#38; !t.getMode().isBlank());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_72'/>
+72
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_72'>1</a>
+<span>
+1. validateTransportMode : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (!anyWithMode) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_73'/>
+73
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_73'>1</a>
+<span>
+1. validateTransportMode : replaced boolean return with false for fr/univ/holitrip/util/TransportHelper::validateTransportMode &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return true; // No mode info available -&#62; permissive</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_74'/>
+74
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_74'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_75'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        </span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_76'/>
+76
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_76'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // All transports must match preferred mode</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_77'/>
+77
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_77'>2</a>
+<span>
+1. validateTransportMode : replaced boolean return with false for fr/univ/holitrip/util/TransportHelper::validateTransportMode &rarr; KILLED<br/>
+2. validateTransportMode : replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::validateTransportMode &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return transports.stream()</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_78'/>
+78
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_78'>4</a>
+<span>
+1. lambda$validateTransportMode$1 : replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::lambda$validateTransportMode$1 &rarr; KILLED<br/>
+2. lambda$validateTransportMode$1 : negated conditional &rarr; KILLED<br/>
+3. lambda$validateTransportMode$1 : negated conditional &rarr; KILLED<br/>
+4. lambda$validateTransportMode$1 : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                .allMatch(t -&#62; t != null &#38;&#38; t.getMode() != null &#38;&#38; preferredMode.equalsIgnoreCase(t.getMode()));</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_79'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_80'/>
+80
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_80'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_81'/>
+81
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_81'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_82'/>
+82
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_82'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Select the best transport from a list based on mode filter and priority.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_83'/>
+83
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_83'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * </span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_84'/>
+84
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_84'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * @param list List of available transports</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_85'/>
+85
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_85'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * @param preferredMode Transport mode to filter by (e.g., &#34;TRAIN&#34;, &#34;PLANE&#34;)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_86'/>
+86
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_86'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * @param priority Selection priority: &#34;PRICE&#34; for cheapest, &#34;DURATION&#34;/&#34;TIME&#34; for fastest</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_87'/>
+87
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_87'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * @return Best matching transport, or null if none found</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_88'/>
+88
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_88'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_89'/>
+89
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_89'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static Transport selectBestTransport(List&#60;Transport&#62; list, String preferredMode, String priority) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_90'/>
+90
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_90'>2</a>
+<span>
+1. selectBestTransport : negated conditional &rarr; KILLED<br/>
+2. selectBestTransport : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (list == null || list.isEmpty()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_91'/>
+91
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_91'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            return null;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_92'/>
+92
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_92'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_93'/>
+93
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_93'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        </span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_94'/>
+94
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_94'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // If preferredMode provided, prefer transports with that mode</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_95'/>
+95
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_95'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        List&#60;Transport&#62; candidates = list;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_96'/>
+96
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_96'>2</a>
+<span>
+1. selectBestTransport : negated conditional &rarr; KILLED<br/>
+2. selectBestTransport : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (preferredMode != null &#38;&#38; !preferredMode.isBlank()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_97'/>
+97
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_97'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            List&#60;Transport&#62; filtered = list.stream()</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_98'/>
+98
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_98'>3</a>
+<span>
+1. lambda$selectBestTransport$2 : replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::lambda$selectBestTransport$2 &rarr; KILLED<br/>
+2. lambda$selectBestTransport$2 : negated conditional &rarr; KILLED<br/>
+3. lambda$selectBestTransport$2 : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                    .filter(t -&#62; t != null &#38;&#38; preferredMode.equalsIgnoreCase(t.getMode()))</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_99'/>
+99
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_99'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    .collect(Collectors.toList());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_100'/>
+100
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_100'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            boolean anyWithMode = list.stream()</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_101'/>
+101
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_101'>4</a>
+<span>
+1. lambda$selectBestTransport$3 : negated conditional &rarr; KILLED<br/>
+2. lambda$selectBestTransport$3 : negated conditional &rarr; KILLED<br/>
+3. lambda$selectBestTransport$3 : negated conditional &rarr; KILLED<br/>
+4. lambda$selectBestTransport$3 : replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::lambda$selectBestTransport$3 &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                    .anyMatch(t -&#62; t != null &#38;&#38; t.getMode() != null &#38;&#38; !t.getMode().isBlank());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_102'/>
+102
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_102'>1</a>
+<span>
+1. selectBestTransport : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            if (filtered.isEmpty()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_103'/>
+103
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_103'>1</a>
+<span>
+1. selectBestTransport : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                if (anyWithMode) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_104'/>
+104
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_104'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    return null; // Mode info exists but none matched -&#62; enforce strictness</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_105'/>
+105
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_105'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_106'/>
+106
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_106'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    candidates = list; // No mode info available -&#62; don&#39;t enforce strictness</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_107'/>
+107
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_107'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_108'/>
+108
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_108'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_109'/>
+109
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_109'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                candidates = filtered;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_110'/>
+110
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_110'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_111'/>
+111
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_111'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_112'/>
+112
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_112'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_113'/>
+113
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_113'>1</a>
+<span>
+1. selectBestTransport : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (&#34;PRICE&#34;.equalsIgnoreCase(priority)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_114'/>
+114
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_114'>1</a>
+<span>
+1. selectBestTransport : replaced return value with null for fr/univ/holitrip/util/TransportHelper::selectBestTransport &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return candidates.stream()</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_115'/>
+115
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_115'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    .min(Comparator.comparingDouble(Transport::getPrice)</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_116'/>
+116
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_116'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                            .thenComparingLong(TransportHelper::transportDurationMinutes))</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_117'/>
+117
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_117'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    .orElse(candidates.get(0));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_118'/>
+118
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_118'>2</a>
+<span>
+1. selectBestTransport : negated conditional &rarr; KILLED<br/>
+2. selectBestTransport : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (&#34;DURATION&#34;.equalsIgnoreCase(priority) || &#34;TIME&#34;.equalsIgnoreCase(priority)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_119'/>
+119
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_119'>1</a>
+<span>
+1. selectBestTransport : replaced return value with null for fr/univ/holitrip/util/TransportHelper::selectBestTransport &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return candidates.stream()</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_120'/>
+120
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_120'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    .min(Comparator.comparingLong(TransportHelper::transportDurationMinutes)</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_121'/>
+121
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_121'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                            .thenComparingDouble(Transport::getPrice))</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_122'/>
+122
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_122'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    .orElse(candidates.get(0));</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_123'/>
+123
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_123'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_124'/>
+124
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_124'>1</a>
+<span>
+1. selectBestTransport : replaced return value with null for fr/univ/holitrip/util/TransportHelper::selectBestTransport &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return candidates.get(0);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_125'/>
+125
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_125'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@3d53e876_126'/>
+126
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_126'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_23'>23</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_23'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>transportDurationMinutes<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testTransportDurationMinutes_ValidTransport()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>transportDurationMinutes<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testTransportDurationMinutes_NullTransport()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>transportDurationMinutes<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testTransportDurationMinutes_ValidTransport()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_24'>24</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_24'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>transportDurationMinutes<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testTransportDurationMinutes_MissingDates()]</span></span> replaced long return with 0 for fr/univ/holitrip/util/TransportHelper::transportDurationMinutes &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_27'>27</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_27'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>transportDurationMinutes<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testTransportDurationMinutes_ValidTransport()]</span></span> replaced long return with 0 for fr/univ/holitrip/util/TransportHelper::transportDurationMinutes &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_29'>29</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_29'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>transportDurationMinutes<br/><b>Killed by : </b>none</span></span> replaced long return with 0 for fr/univ/holitrip/util/TransportHelper::transportDurationMinutes &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_39'>39</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_39'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_NullTransport()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_EmptyList()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_ValidMultiLeg()]</span></span> changed conditional boundary &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_40'>40</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_40'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_NullTransport()]</span></span> replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::isMultiLeg &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_44'>44</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_44'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_ContainsNull()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_ValidMultiLeg()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_ValidMultiLeg()]</span></span> Replaced integer subtraction with addition &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_46'>46</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_46'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_ContainsNull()]</span></span> Replaced integer addition with subtraction &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_47'>47</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_47'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_ValidMultiLeg()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_ContainsNull()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_48'>48</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_48'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_ContainsNull()]</span></span> replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::isMultiLeg &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_50'>50</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_50'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_ValidMultiLeg()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_InvalidContinuity()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_51'>51</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_51'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_InvalidContinuity()]</span></span> replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::isMultiLeg &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_54'>54</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_54'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isMultiLeg<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_ValidMultiLeg()]</span></span> replaced boolean return with false for fr/univ/holitrip/util/TransportHelper::isMultiLeg &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_62'>62</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_62'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>validateTransportMode<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NullList()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>validateTransportMode<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NoPreferredMode()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_63'>63</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_63'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>validateTransportMode<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NullList()]</span></span> replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::validateTransportMode &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_65'>65</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_65'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>validateTransportMode<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NoPreferredMode()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>validateTransportMode<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NoPreferredMode()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_66'>66</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_66'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>validateTransportMode<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NoPreferredMode()]</span></span> replaced boolean return with false for fr/univ/holitrip/util/TransportHelper::validateTransportMode &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_71'>71</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_71'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$validateTransportMode$0<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NoModeInfo()]</span></span> replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::lambda$validateTransportMode$0 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>lambda$validateTransportMode$0<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_MismatchMode()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>lambda$validateTransportMode$0<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_MismatchMode()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>lambda$validateTransportMode$0<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NoModeInfo()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_72'>72</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_72'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>validateTransportMode<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NoModeInfo()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_73'>73</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_73'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>validateTransportMode<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NoModeInfo()]</span></span> replaced boolean return with false for fr/univ/holitrip/util/TransportHelper::validateTransportMode &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_77'>77</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_77'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>validateTransportMode<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_MatchingMode()]</span></span> replaced boolean return with false for fr/univ/holitrip/util/TransportHelper::validateTransportMode &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>validateTransportMode<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_MismatchMode()]</span></span> replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::validateTransportMode &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_78'>78</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_78'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$validateTransportMode$1<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_MismatchMode()]</span></span> replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::lambda$validateTransportMode$1 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>lambda$validateTransportMode$1<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_MatchingMode()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>lambda$validateTransportMode$1<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_MatchingMode()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>lambda$validateTransportMode$1<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_MatchingMode()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_90'>90</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_90'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>selectBestTransport<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_EmptyList()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>selectBestTransport<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_NullList()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_96'>96</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_96'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>selectBestTransport<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_ModeNotFound_WithModeInfo()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>selectBestTransport<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_DefaultPriority()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_98'>98</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_98'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$selectBestTransport$2<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_ModeNotFound_WithModeInfo()]</span></span> replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::lambda$selectBestTransport$2 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>lambda$selectBestTransport$2<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_WithModeFilter()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>lambda$selectBestTransport$2<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_ModeNotFound_WithModeInfo()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_101'>101</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_101'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$selectBestTransport$3<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_ModeNotFound_WithModeInfo()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>lambda$selectBestTransport$3<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_ModeNotFound_NoModeInfo()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>lambda$selectBestTransport$3<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_ModeNotFound_WithModeInfo()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>lambda$selectBestTransport$3<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_ModeNotFound_NoModeInfo()]</span></span> replaced boolean return with true for fr/univ/holitrip/util/TransportHelper::lambda$selectBestTransport$3 &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_102'>102</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_102'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>selectBestTransport<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_ModeNotFound_NoModeInfo()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_103'>103</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_103'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>selectBestTransport<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_ModeNotFound_NoModeInfo()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_113'>113</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_113'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>selectBestTransport<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_TimeMode()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_114'>114</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_114'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>selectBestTransport<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_PriceMode()]</span></span> replaced return value with null for fr/univ/holitrip/util/TransportHelper::selectBestTransport &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_118'>118</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_118'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>selectBestTransport<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_DefaultPriority()]</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>selectBestTransport<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_DefaultPriority()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_119'>119</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_119'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>selectBestTransport<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_TimeMode()]</span></span> replaced return value with null for fr/univ/holitrip/util/TransportHelper::selectBestTransport &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@3d53e876_124'>124</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@3d53e876_124'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>selectBestTransport<br/><b>Killed by : </b>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_DefaultPriority()]</span></span> replaced return value with null for fr/univ/holitrip/util/TransportHelper::selectBestTransport &rarr; KILLED</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_EmptyList()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_DefaultPriority()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_TimeMode()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_PriceMode()] (1 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_ModeNotFound_NoModeInfo()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_ModeNotFound_WithModeInfo()] (3 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_WithModeFilter()] (2 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_DurationMode()] (7 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testHotelStrictRatingRejection()] (5 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:modeRequestedButNoMatchingTransportYieldsEmpty()] (7 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testHotelRatingStrictCheckBelowMinimum()] (9 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testReturnTransportNotFoundReturnsEmpty()] (7 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testStrictHotelRatingCheckAfterSelection()] (5 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testBudgetExactlyAtLimit()] (7 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testHotelPriorityStarSelectsHighestRating()] (6 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testMinHotelRatingBoundaryOne()] (6 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testMinHotelRatingExactBoundary()] (9 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:tieBreakingPriceEqualsUsesDuration()] (11 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testNullTransportModeAllowsAnyMode()] (8 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testHotelRatingExactMatch()] (10 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:shouldHandleCorrespondancesAndPriorities()] (9 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:shouldReturnPackagesMatchingAllCriteria()] (6 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:malformedDepartureDateHandledWithoutException()] (16 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testDurationPriorityBreaksTie()] (11 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testTransportAndHotelWithMultiplePrioritiesSTAR()] (16 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testEmptyActivityCategoriesHandling()] (16 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testHotelListWithNullEntriesFilteredOut()] (17 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testNegativeBudgetClamping()] (10 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:shouldRespectMaxBudget()] (17 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:outboundTrainReturnPlaneAllowedWhenPreferenceProvidedForOutboundOnly()] (16 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testMinHotelRatingBoundaryZero()] (21 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:shouldMaximizeNumberOfActivitiesWithinBudget()] (12 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testTransportSelectionWithoutExplicitPriority()] (20 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testActivityBudgetExactMatch()] (15 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testBudgetCalculationWithZeroCosts()] (17 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testActivityWithNullAddressSkipsGeocoding()] (20 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:shouldNotAllowTwoActivitiesSameDate()] (22 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testHotelRatingBoundaryAtMinimum()] (34 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testBudgetCalculationMathPrecision()] (43 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:shouldFilterActivitiesByDistance()] (85 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testGeocodingCacheHitForHotel()] (533 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NoModeInfo()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_MismatchMode()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_MatchingMode()] (3 ms)</li><li>fr.univ.holitrip.service.unit.PackageServiceTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.service.unit.PackageServiceTest]/[method:testMultiLegTransportOutboundAndReturn()] (29 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_ContainsNull()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_InvalidContinuity()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_ValidMultiLeg()] (3 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NullList()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_EmptyList()] (1 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testTransportDurationMinutes_MissingDates()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testTransportDurationMinutes_ValidTransport()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testValidateTransportMode_NoPreferredMode()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testTransportDurationMinutes_NullTransport()] (1 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_NullTransport()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_EmptyList()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testIsMultiLeg_SingleTransport()] (0 ms)</li><li>fr.univ.holitrip.util.TransportHelperTest.[engine:junit-jupiter]/[class:fr.univ.holitrip.util.TransportHelperTest]/[method:testSelectBestTransport_NullList()] (0 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.15.3
+
+</body>
+</html>

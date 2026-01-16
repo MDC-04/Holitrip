@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsonTransportService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Holitrip</a> &gt; <a href="index.source.html" class="el_package">fr.univ.holitrip.service.impl</a> &gt; <span class="el_source">JsonTransportService.java</span></div><h1>JsonTransportService.java</h1><pre class="source lang-java linenums">package fr.univ.holitrip.service.impl;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+// import java.lang.ProcessBuilder.Redirect.Type;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+//import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+//import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.reflect.TypeToken;
+
+import fr.univ.holitrip.model.Transport;
+import fr.univ.holitrip.service.TransportService;
+
+/**
+ * JSON-based implementation of TransportService.
+ * Reads transport data from a JSON file and filters based on criteria.
+ * Supports multi-leg journeys using BFS algorithm.
+ */
+public class JsonTransportService implements TransportService {
+    private String jsonFilePath;
+    private static final int MAX_LEGS = 3; // Maximum number of legs allowed
+    private static final long MIN_CONNECTION_MINUTES = 60; // Minimum connection time
+
+<span class="fc" id="L35">    public JsonTransportService(String jsonFilePath) {</span>
+<span class="fc" id="L36">        this.jsonFilePath = jsonFilePath;</span>
+<span class="fc" id="L37">    }</span>
+    
+    /**
+     * Represents a path in the journey search (for BFS algorithm).
+     */
+    private static class JourneyPath {
+        String currentCity;
+        LocalDateTime arrivalTime;
+        List&lt;Transport&gt; transports;
+        Set&lt;String&gt; visitedCities;
+        String mode; // Track mode for homogeneity
+        
+<span class="fc" id="L49">        JourneyPath(String city, LocalDateTime time, List&lt;Transport&gt; transports, Set&lt;String&gt; visited, String mode) {</span>
+<span class="fc" id="L50">            this.currentCity = city;</span>
+<span class="fc" id="L51">            this.arrivalTime = time;</span>
+<span class="fc" id="L52">            this.transports = new ArrayList&lt;&gt;(transports);</span>
+<span class="fc" id="L53">            this.visitedCities = new HashSet&lt;&gt;(visited);</span>
+<span class="fc" id="L54">            this.mode = mode;</span>
+<span class="fc" id="L55">        }</span>
+    }
+
+    @Override
+    public List&lt;Transport&gt; findTransports(String departureCity, String arrivalCity, LocalDateTime departureDate, String mode) {
+        try {
+            // 1. Read JSON file
+<span class="fc" id="L62">            InputStream is = getClass().getClassLoader().getResourceAsStream(jsonFilePath);</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">            if (is == null) {</span>
+<span class="nc" id="L64">                return new ArrayList&lt;&gt;();</span>
+            }
+
+            // 2. Parse JSON with Gson (custom adapter for LocalDateTime)
+<span class="fc" id="L68">            Gson gson = new GsonBuilder()</span>
+<span class="fc" id="L69">                .registerTypeAdapter(LocalDateTime.class, </span>
+                    (JsonDeserializer&lt;LocalDateTime&gt;) (json, type, context) -&gt; 
+<span class="fc" id="L71">                        LocalDateTime.parse(json.getAsString()))</span>
+<span class="fc" id="L72">                .create();</span>
+<span class="fc" id="L73">            java.lang.reflect.Type listType = new TypeToken&lt;List&lt;Transport&gt;&gt;() {}.getType();</span>
+<span class="fc" id="L74">            List&lt;Transport&gt; allTransports = gson.fromJson(new InputStreamReader(is), listType);</span>
+
+            // 3. Search for direct transports
+<span class="fc" id="L77">            List&lt;Transport&gt; directTransports = allTransports.stream()</span>
+<span class="pc bpc" id="L78" title="1 of 4 branches missed.">                .filter(t -&gt; departureCity == null || t.getDepartureCity().equalsIgnoreCase(departureCity))</span>
+<span class="pc bpc" id="L79" title="1 of 4 branches missed.">                .filter(t -&gt; arrivalCity == null || t.getArrivalCity().equalsIgnoreCase(arrivalCity))</span>
+<span class="pc bpc" id="L80" title="1 of 4 branches missed.">                .filter(t -&gt; departureDate == null || t.getDepartureDateTime().toLocalDate().isEqual(departureDate.toLocalDate()))</span>
+<span class="fc bfc" id="L81" title="All 4 branches covered.">                .filter(t -&gt; mode == null || t.getMode().equalsIgnoreCase(mode))</span>
+<span class="fc" id="L82">                .collect(Collectors.toList());</span>
+
+            // If direct transports found, return them
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            if (!directTransports.isEmpty()) {</span>
+<span class="fc" id="L86">                return directTransports;</span>
+            }
+
+            // 4. If no direct transport, search for multi-leg journey using BFS
+<span class="pc bpc" id="L90" title="2 of 4 branches missed.">            if (departureCity != null &amp;&amp; arrivalCity != null) {</span>
+<span class="fc" id="L91">                return findMultiLegJourney(allTransports, departureCity, arrivalCity, departureDate, mode);</span>
+            }
+
+<span class="nc" id="L94">            return new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L96">        } catch (Exception e) {</span>
+            // In case of error: return empty list
+<span class="nc" id="L98">            return new ArrayList&lt;&gt;();</span>
+        }
+    }
+    
+    /**
+     * Find multi-leg journey using BFS algorithm.
+     * Ensures mode homogeneity and minimum connection time.
+     */
+    private List&lt;Transport&gt; findMultiLegJourney(List&lt;Transport&gt; allTransports, String departureCity, 
+                                                 String arrivalCity, LocalDateTime departureDate, String mode) {
+<span class="fc" id="L108">        Queue&lt;JourneyPath&gt; queue = new LinkedList&lt;&gt;();</span>
+        
+        // Initialize with first leg options
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        for (Transport firstTransport : allTransports) {</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">            if (!firstTransport.getDepartureCity().equalsIgnoreCase(departureCity)) {</span>
+<span class="fc" id="L113">                continue;</span>
+            }
+<span class="pc bpc" id="L115" title="1 of 4 branches missed.">            if (departureDate != null &amp;&amp; !firstTransport.getDepartureDateTime().toLocalDate().isEqual(departureDate.toLocalDate())) {</span>
+<span class="fc" id="L116">                continue;</span>
+            }
+<span class="pc bpc" id="L118" title="1 of 4 branches missed.">            if (mode != null &amp;&amp; !firstTransport.getMode().equalsIgnoreCase(mode)) {</span>
+<span class="nc" id="L119">                continue;</span>
+            }
+            
+<span class="fc" id="L122">            Set&lt;String&gt; visited = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L123">            visited.add(departureCity);</span>
+<span class="fc" id="L124">            visited.add(firstTransport.getArrivalCity());</span>
+            
+<span class="fc" id="L126">            List&lt;Transport&gt; path = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L127">            path.add(firstTransport);</span>
+            
+<span class="fc" id="L129">            queue.add(new JourneyPath(</span>
+<span class="fc" id="L130">                firstTransport.getArrivalCity(),</span>
+<span class="fc" id="L131">                firstTransport.getArrivalDateTime(),</span>
+                path,
+                visited,
+<span class="fc" id="L134">                firstTransport.getMode()</span>
+            ));
+<span class="fc" id="L136">        }</span>
+        
+        // BFS to find path to destination
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        while (!queue.isEmpty()) {</span>
+<span class="fc" id="L140">            JourneyPath current = queue.poll();</span>
+            
+            // Check if we reached destination
+<span class="fc bfc" id="L143" title="All 2 branches covered.">            if (current.currentCity.equalsIgnoreCase(arrivalCity)) {</span>
+<span class="fc" id="L144">                return current.transports;</span>
+            }
+            
+            // Check if we exceeded max legs
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">            if (current.transports.size() &gt;= MAX_LEGS) {</span>
+<span class="nc" id="L149">                continue;</span>
+            }
+            
+            // Explore next legs
+<span class="fc bfc" id="L153" title="All 2 branches covered.">            for (Transport nextTransport : allTransports) {</span>
+                // Must depart from current city
+<span class="fc bfc" id="L155" title="All 2 branches covered.">                if (!nextTransport.getDepartureCity().equalsIgnoreCase(current.currentCity)) {</span>
+<span class="fc" id="L156">                    continue;</span>
+                }
+                
+                // Avoid cycles
+<span class="fc bfc" id="L160" title="All 2 branches covered.">                if (current.visitedCities.contains(nextTransport.getArrivalCity())) {</span>
+<span class="fc" id="L161">                    continue;</span>
+                }
+                
+                // Check mode homogeneity
+<span class="fc bfc" id="L165" title="All 2 branches covered.">                if (!nextTransport.getMode().equalsIgnoreCase(current.mode)) {</span>
+<span class="fc" id="L166">                    continue;</span>
+                }
+                
+                // Check connection time (minimum 60 minutes)
+<span class="fc bfc" id="L170" title="All 2 branches covered.">                if (!nextTransport.getDepartureDateTime().isAfter(current.arrivalTime.plusMinutes(MIN_CONNECTION_MINUTES))) {</span>
+<span class="fc" id="L171">                    continue;</span>
+                }
+                
+                // Create new path
+<span class="fc" id="L175">                Set&lt;String&gt; newVisited = new HashSet&lt;&gt;(current.visitedCities);</span>
+<span class="fc" id="L176">                newVisited.add(nextTransport.getArrivalCity());</span>
+                
+<span class="fc" id="L178">                List&lt;Transport&gt; newPath = new ArrayList&lt;&gt;(current.transports);</span>
+<span class="fc" id="L179">                newPath.add(nextTransport);</span>
+                
+<span class="fc" id="L181">                queue.add(new JourneyPath(</span>
+<span class="fc" id="L182">                    nextTransport.getArrivalCity(),</span>
+<span class="fc" id="L183">                    nextTransport.getArrivalDateTime(),</span>
+                    newPath,
+                    newVisited,
+                    current.mode
+                ));
+<span class="fc" id="L188">            }</span>
+<span class="fc" id="L189">        }</span>
+        
+        // No path found
+<span class="fc" id="L192">        return new ArrayList&lt;&gt;();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

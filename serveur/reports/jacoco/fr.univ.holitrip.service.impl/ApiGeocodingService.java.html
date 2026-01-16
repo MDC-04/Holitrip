@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApiGeocodingService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Holitrip</a> &gt; <a href="index.source.html" class="el_package">fr.univ.holitrip.service.impl</a> &gt; <span class="el_source">ApiGeocodingService.java</span></div><h1>ApiGeocodingService.java</h1><pre class="source lang-java linenums">package fr.univ.holitrip.service.impl;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import fr.univ.holitrip.model.Coordinates;
+import fr.univ.holitrip.service.GeocodingService;
+import fr.univ.holitrip.exception.GeocodingException;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+
+/**
+ * Implementation of GeocodingService using the geocode.maps.co API.
+ * Converts a postal address into GPS coordinates (latitude, longitude).
+ */
+public class ApiGeocodingService implements GeocodingService {
+    private static final String API_URL = &quot;https://geocode.maps.co/search?q=&quot;;
+    private final HttpClient httpClient;
+    private final Gson gson;
+
+    /**
+     * Default constructor: creates a standard HttpClient.
+     */
+    public ApiGeocodingService() {
+<span class="nc" id="L33">        this(HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build());</span>
+<span class="nc" id="L34">    }</span>
+
+    /**
+     * Constructor for HttpClient injection (unit tests).
+     * @param httpClient HTTP client to use
+     */
+<span class="fc" id="L40">    public ApiGeocodingService(HttpClient httpClient) {</span>
+<span class="fc" id="L41">        this.httpClient = httpClient;</span>
+<span class="fc" id="L42">        this.gson = new Gson();</span>
+<span class="fc" id="L43">    }</span>
+
+    /**
+     * Converts a postal address into GPS coordinates via the geocode.maps.co API.
+     * @param address the postal address to geocode
+     * @return the corresponding GPS coordinates
+     * @throws GeocodingException in case of network error, parsing error, or no result
+     */
+    @Override
+    public Coordinates geocode(String address) throws GeocodingException {
+<span class="fc" id="L53">        String encodedAddress = URLEncoder.encode(address, StandardCharsets.UTF_8);</span>
+<span class="fc" id="L54">        String url = API_URL + encodedAddress;</span>
+        // Read the API key from application.properties
+<span class="fc" id="L56">        String apiKey = null;</span>
+<span class="fc" id="L57">        try (java.io.InputStream in = getClass().getClassLoader().getResourceAsStream(&quot;application.properties&quot;)) {</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">            if (in != null) {</span>
+<span class="fc" id="L59">                java.util.Properties props = new java.util.Properties();</span>
+<span class="fc" id="L60">                props.load(in);</span>
+<span class="fc" id="L61">                apiKey = props.getProperty(&quot;GEOCODING_API_KEY&quot;);</span>
+            }
+<span class="pc" id="L63">        } catch (IOException ignore) {}</span>
+        // If missing, fallback to the environment variable
+<span class="pc bpc" id="L65" title="2 of 4 branches missed.">        if (apiKey == null || apiKey.isBlank()) {</span>
+<span class="nc" id="L66">            apiKey = System.getenv(&quot;GEOCODING_API_KEY&quot;);</span>
+        }
+<span class="pc bpc" id="L68" title="2 of 4 branches missed.">        if (apiKey != null &amp;&amp; !apiKey.isBlank()) {</span>
+<span class="fc" id="L69">            url = url + &quot;&amp;api_key=&quot; + URLEncoder.encode(apiKey, StandardCharsets.UTF_8);</span>
+        }
+
+<span class="fc" id="L72">        int maxAttempts = 3;</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        for (int attempt = 1; attempt &lt;= maxAttempts; attempt++) {</span>
+            try {
+<span class="fc" id="L75">                HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="fc" id="L76">                        .uri(URI.create(url))</span>
+<span class="fc" id="L77">                        .GET()</span>
+<span class="fc" id="L78">                        .timeout(Duration.ofSeconds(5))</span>
+<span class="fc" id="L79">                        .build();</span>
+<span class="fc" id="L80">                HttpResponse&lt;String&gt; response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());</span>
+<span class="fc" id="L81">                int sc = response.statusCode();</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">                if (sc == 200) {</span>
+<span class="fc" id="L83">                    JsonArray results = gson.fromJson(response.body(), JsonArray.class);</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">                    if (results.size() == 0) {</span>
+<span class="fc" id="L85">                        throw new GeocodingException(&quot;No result found for address: &quot; + address);</span>
+                    }
+<span class="fc" id="L87">                    JsonObject first = results.get(0).getAsJsonObject();</span>
+<span class="pc bpc" id="L88" title="1 of 4 branches missed.">                    if (!first.has(&quot;lat&quot;) || !first.has(&quot;lon&quot;)) {</span>
+<span class="fc" id="L89">                        throw new GeocodingException(&quot;Invalid JSON response: missing lat/lon fields&quot;);</span>
+                    }
+<span class="fc" id="L91">                    double lat = Double.parseDouble(first.get(&quot;lat&quot;).getAsString());</span>
+<span class="fc" id="L92">                    double lon = Double.parseDouble(first.get(&quot;lon&quot;).getAsString());</span>
+<span class="fc" id="L93">                    return new Coordinates(lat, lon);</span>
+                }
+                // Retry on server errors or rate limit, otherwise fail fast
+<span class="pc bpc" id="L96" title="3 of 4 branches missed.">                if (sc &gt;= 500 || sc == 429) {</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">                    if (attempt == maxAttempts) {</span>
+<span class="fc" id="L98">                        throw new GeocodingException(&quot;HTTP error: &quot; + sc);</span>
+                    }
+                    try {
+<span class="fc" id="L101">                        Thread.sleep(300L * attempt);</span>
+<span class="nc" id="L102">                    } catch (InterruptedException ie) {</span>
+<span class="nc" id="L103">                        Thread.currentThread().interrupt();</span>
+<span class="nc" id="L104">                        throw new GeocodingException(&quot;Interrupted during retry wait&quot;, ie);</span>
+<span class="fc" id="L105">                    }</span>
+<span class="fc" id="L106">                    continue;</span>
+                }
+<span class="nc" id="L108">                throw new GeocodingException(&quot;HTTP error: &quot; + sc);</span>
+<span class="fc" id="L109">            } catch (IOException e) {</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">                if (attempt == maxAttempts) {</span>
+<span class="fc" id="L111">                    throw new GeocodingException(&quot;Network error&quot;, e);</span>
+                }
+                try {
+<span class="fc" id="L114">                    Thread.sleep(200L * attempt);</span>
+<span class="nc" id="L115">                } catch (InterruptedException ie) {</span>
+<span class="nc" id="L116">                    Thread.currentThread().interrupt();</span>
+<span class="nc" id="L117">                    throw new GeocodingException(&quot;Interrupted during retry wait&quot;, ie);</span>
+<span class="fc" id="L118">                }</span>
+<span class="nc" id="L119">            } catch (InterruptedException e) {</span>
+<span class="nc" id="L120">                Thread.currentThread().interrupt();</span>
+<span class="nc" id="L121">                throw new GeocodingException(&quot;Interrupted&quot;, e);</span>
+<span class="fc" id="L122">            } catch (JsonParseException | NumberFormatException e) {</span>
+<span class="fc" id="L123">                throw new GeocodingException(&quot;JSON parsing error&quot;, e);</span>
+<span class="fc" id="L124">            }</span>
+        }
+<span class="nc" id="L126">        throw new GeocodingException(&quot;Failed to geocode address after retries: &quot; + address);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

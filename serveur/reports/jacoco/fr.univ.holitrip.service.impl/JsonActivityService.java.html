@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsonActivityService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Holitrip</a> &gt; <a href="index.source.html" class="el_package">fr.univ.holitrip.service.impl</a> &gt; <span class="el_source">JsonActivityService.java</span></div><h1>JsonActivityService.java</h1><pre class="source lang-java linenums">package fr.univ.holitrip.service.impl;
+
+import fr.univ.holitrip.model.Activity;
+import fr.univ.holitrip.model.Coordinates;
+import fr.univ.holitrip.service.ActivityService;
+import fr.univ.holitrip.service.DistanceService;
+import fr.univ.holitrip.service.GeocodingService;
+import fr.univ.holitrip.exception.GeocodingException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * JSON-based implementation of ActivityService.
+ * Reads activity data from a JSON file and filters based on criteria.
+ * Uses GeocodingService and DistanceService for distance filtering.
+ */
+public class JsonActivityService implements ActivityService {
+    private String jsonFilePath;
+    private GeocodingService geocodingService;
+    private DistanceService distanceService;
+
+    /**
+     * Constructor with dependency injection.
+     * 
+     * @param jsonFilePath path to the JSON file
+     * @param geocodingService service to convert addresses to GPS coordinates
+     * @param distanceService service to calculate distances
+     */
+    public JsonActivityService(String jsonFilePath, 
+                               GeocodingService geocodingService,
+<span class="fc" id="L42">                               DistanceService distanceService) {</span>
+<span class="fc" id="L43">        this.jsonFilePath = jsonFilePath;</span>
+<span class="fc" id="L44">        this.geocodingService = geocodingService;</span>
+<span class="fc" id="L45">        this.distanceService = distanceService;</span>
+<span class="fc" id="L46">    }</span>
+
+    @Override
+    public List&lt;Activity&gt; findActivities(String city, List&lt;String&gt; categories, 
+                                         LocalDate date, double maxPrice, 
+                                         Coordinates hotelLocation, double maxDistance) {
+        try {
+            // 1. Read JSON file
+<span class="fc" id="L54">            InputStream is = getClass().getClassLoader().getResourceAsStream(jsonFilePath);</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">            if (is == null) {</span>
+<span class="nc" id="L56">                return new ArrayList&lt;&gt;();</span>
+            }
+
+            // 2. Parse JSON with Gson (custom adapter for LocalDate)
+<span class="fc" id="L60">            Gson gson = new GsonBuilder()</span>
+<span class="fc" id="L61">                .registerTypeAdapter(LocalDate.class, </span>
+                    (JsonDeserializer&lt;LocalDate&gt;) (json, type, context) -&gt; 
+<span class="fc" id="L63">                        LocalDate.parse(json.getAsString()))</span>
+<span class="fc" id="L64">                .create();</span>
+<span class="fc" id="L65">            Type listType = new TypeToken&lt;List&lt;Activity&gt;&gt;(){}.getType();</span>
+<span class="fc" id="L66">            List&lt;Activity&gt; allActivities = gson.fromJson(new InputStreamReader(is), listType);</span>
+
+            // 3. Filter by basic criteria
+<span class="fc" id="L69">            List&lt;Activity&gt; filtered = allActivities.stream()</span>
+<span class="fc" id="L70">                .filter(a -&gt; a.getCity().equalsIgnoreCase(city))</span>
+<span class="pc bpc" id="L71" title="1 of 4 branches missed.">                .filter(a -&gt; categories.isEmpty() || categories.contains(a.getCategory()))</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">                .filter(a -&gt; a.getPrice() &lt;= maxPrice)</span>
+<span class="fc" id="L73">                .collect(Collectors.toList());</span>
+
+            // 4. Filter by distance if hotelLocation is provided
+<span class="pc bpc" id="L76" title="2 of 4 branches missed.">            if (hotelLocation != null &amp;&amp; maxDistance &gt; 0) {</span>
+<span class="fc" id="L77">                filtered = filtered.stream()</span>
+<span class="fc" id="L78">                    .filter(a -&gt; isWithinDistance(a, hotelLocation, maxDistance))</span>
+<span class="fc" id="L79">                    .collect(Collectors.toList());</span>
+            }
+
+<span class="fc" id="L82">            return filtered;</span>
+
+<span class="nc" id="L84">        } catch (Exception e) {</span>
+            // In case of error: return empty list
+<span class="nc" id="L86">            return new ArrayList&lt;&gt;();</span>
+        }
+    }
+
+    /**
+     * Checks if an activity is within the specified distance from the hotel.
+     * 
+     * @param activity the activity to check
+     * @param hotelLocation the hotel GPS coordinates
+     * @param maxDistance the maximum distance in km
+     * @return true if within distance, false otherwise
+     */
+    private boolean isWithinDistance(Activity activity, Coordinates hotelLocation, double maxDistance) {
+        try {
+            // Geocode activity address
+<span class="fc" id="L101">            String fullAddress = activity.getAddress() + &quot;, &quot; + activity.getCity();</span>
+<span class="fc" id="L102">            Coordinates activityLocation = geocodingService.geocode(fullAddress);</span>
+            
+            // Calculate distance
+<span class="fc" id="L105">            double distance = distanceService.calculateDistance(hotelLocation, activityLocation);</span>
+            
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">            return distance &lt;= maxDistance;</span>
+            
+<span class="nc" id="L109">        } catch (GeocodingException e) {</span>
+            // If geocoding fails, exclude the activity
+<span class="nc" id="L111">            return false;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsonHotelService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Holitrip</a> &gt; <a href="index.source.html" class="el_package">fr.univ.holitrip.service.impl</a> &gt; <span class="el_source">JsonHotelService.java</span></div><h1>JsonHotelService.java</h1><pre class="source lang-java linenums">package fr.univ.holitrip.service.impl;
+
+import fr.univ.holitrip.model.Hotel;
+import fr.univ.holitrip.service.HotelService;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * JSON-based implementation of HotelService.
+ * Reads hotel data from a JSON file and filters based on criteria.
+ */
+public class JsonHotelService implements HotelService {
+    private String jsonFilePath;
+
+<span class="fc" id="L23">    public JsonHotelService(String jsonFilePath) {</span>
+<span class="fc" id="L24">        this.jsonFilePath = jsonFilePath;</span>
+<span class="fc" id="L25">    }</span>
+
+    @Override
+    public List&lt;Hotel&gt; findHotels(String city, int minRating, double maxPricePerNight) {
+        try {
+            // 1. Read JSON file
+<span class="fc" id="L31">            InputStream is = getClass().getClassLoader().getResourceAsStream(jsonFilePath);</span>
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">            if (is == null) {</span>
+<span class="nc" id="L33">                return new ArrayList&lt;&gt;();</span>
+            }
+
+            // 2. Parse JSON with Gson
+<span class="fc" id="L37">            Gson gson = new Gson();</span>
+<span class="fc" id="L38">            Type listType = new TypeToken&lt;List&lt;Hotel&gt;&gt;(){}.getType();</span>
+<span class="fc" id="L39">            List&lt;Hotel&gt; allHotels = gson.fromJson(new InputStreamReader(is), listType);</span>
+
+            // 3. Filter by criteria
+<span class="fc" id="L42">            return allHotels.stream()</span>
+<span class="fc" id="L43">                .filter(h -&gt; h.getCity().equalsIgnoreCase(city))</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">                .filter(h -&gt; h.getRating() &gt;= minRating)</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">                .filter(h -&gt; h.getPricePerNight() &lt;= maxPricePerNight)</span>
+<span class="fc" id="L46">                .collect(Collectors.toList());</span>
+
+<span class="nc" id="L48">        } catch (Exception e) {</span>
+            // In case of error: return empty list
+<span class="nc" id="L50">            return new ArrayList&lt;&gt;();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

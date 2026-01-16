@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PackageBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Holitrip</a> &gt; <a href="index.source.html" class="el_package">fr.univ.holitrip.service.impl</a> &gt; <span class="el_source">PackageBuilder.java</span></div><h1>PackageBuilder.java</h1><pre class="source lang-java linenums">package fr.univ.holitrip.service.impl;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import fr.univ.holitrip.model.Activity;
+import fr.univ.holitrip.model.Hotel;
+import fr.univ.holitrip.model.Package;
+import fr.univ.holitrip.model.Trip;
+import fr.univ.holitrip.model.Transport;
+import fr.univ.holitrip.model.Coordinates;
+import fr.univ.holitrip.service.ActivityService;
+import fr.univ.holitrip.service.DistanceService;
+import fr.univ.holitrip.service.HotelService;
+import fr.univ.holitrip.service.GeocodingService;
+import fr.univ.holitrip.service.PackageService;
+import fr.univ.holitrip.service.TransportService;
+import fr.univ.holitrip.util.TransportHelper;
+
+public class PackageBuilder implements PackageService {
+    private final TransportService transportService;
+    private final HotelService hotelService;
+    private final ActivityService activityService;
+    private final DistanceService distanceService;
+    private final GeocodingService geocodingService;
+
+    public PackageBuilder(TransportService transportService, HotelService hotelService,
+<span class="fc" id="L36">            ActivityService activityService, DistanceService distanceService, GeocodingService geocodingService) {</span>
+<span class="fc" id="L37">        this.transportService = transportService;</span>
+<span class="fc" id="L38">        this.hotelService = hotelService;</span>
+<span class="fc" id="L39">        this.activityService = activityService;</span>
+<span class="fc" id="L40">        this.distanceService = distanceService;</span>
+<span class="fc" id="L41">        this.geocodingService = geocodingService;</span>
+<span class="fc" id="L42">        this.geocodeCache = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L43">    }</span>
+
+    // Simple in-memory cache for geocoding results during a single execution.
+    private final Map&lt;String, Coordinates&gt; geocodeCache;
+
+    @Override
+    public List&lt;Package&gt; findPackages(String departureCity, String destinationCity, String departureDate,
+            int tripDurationDays, double maxBudget, String transportMode, String transportPriority, int minHotelRating,
+            String hotelPriority, List&lt;String&gt; activityCategories, double maxDistanceKm) {
+
+        // Parse dates to LocalDateTime for transport queries and validation
+<span class="fc" id="L54">        java.time.LocalDateTime outboundDateTime = null;</span>
+<span class="fc" id="L55">        java.time.LocalDateTime returnDateTime = null;</span>
+        try {
+<span class="pc bpc" id="L57" title="2 of 4 branches missed.">            if (departureDate != null &amp;&amp; !departureDate.isBlank()) {</span>
+<span class="fc" id="L58">                java.time.LocalDate d = java.time.LocalDate.parse(departureDate);</span>
+<span class="fc" id="L59">                outboundDateTime = d.atTime(8, 0); // default morning departure</span>
+<span class="fc" id="L60">                returnDateTime = outboundDateTime.plusDays(Math.max(1, tripDurationDays)).withHour(18).withMinute(0);</span>
+            }
+<span class="fc" id="L62">        } catch (Exception e) {</span>
+            // ignore parse errors and leave null (services should handle null)
+<span class="fc" id="L64">        }</span>
+
+        // Retrieve candidates from services (tests mock these calls)
+<span class="fc" id="L67">        List&lt;Transport&gt; transports = transportService.findTransports(departureCity, destinationCity, outboundDateTime, transportMode);</span>
+<span class="fc" id="L68">        List&lt;Hotel&gt; hotels = hotelService.findHotels(destinationCity, minHotelRating, Double.MAX_VALUE);</span>
+
+        // 1) If all sources empty -&gt; return a Package containing errors
+<span class="pc bpc" id="L71" title="2 of 6 branches missed.">        if ((transports == null || transports.isEmpty())</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            &amp;&amp; (hotels == null || hotels.isEmpty())) {</span>
+<span class="fc" id="L73">            Package p = new Package();</span>
+<span class="fc" id="L74">            p.addError(&quot;No data available for given criteria&quot;);</span>
+<span class="fc" id="L75">            return Collections.singletonList(p);</span>
+        }
+
+        // 2) If transports empty but others present -&gt; cannot build package
+<span class="pc bpc" id="L79" title="1 of 4 branches missed.">        if (transports == null || transports.isEmpty()) {</span>
+<span class="fc" id="L80">            return Collections.emptyList();</span>
+        }
+
+        // 3) If hotels empty -&gt; cannot build package
+<span class="pc bpc" id="L84" title="1 of 4 branches missed.">        if (hotels == null || hotels.isEmpty()) {</span>
+<span class="fc" id="L85">            return Collections.emptyList();</span>
+        }
+
+        // 4) Choose transport according to priority (outbound)
+        // JsonTransportService now returns multi-leg solutions directly as [leg1, leg2]
+<span class="fc" id="L90">        List&lt;Transport&gt; chosenOutboundLegs = null;</span>
+        
+<span class="pc bpc" id="L92" title="2 of 4 branches missed.">        if (transports != null &amp;&amp; !transports.isEmpty()) {</span>
+            // Check if transports represent a multi-leg solution from JsonTransportService
+<span class="fc bfc" id="L94" title="All 2 branches covered.">            if (TransportHelper.isMultiLeg(transports)) {</span>
+                // This is a multi-leg solution - validate mode and use directly
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">                if (TransportHelper.validateTransportMode(transports, transportMode)) {</span>
+<span class="fc" id="L97">                    chosenOutboundLegs = transports;</span>
+                }
+            } else {
+                // These are direct transport options - select best one
+<span class="fc" id="L101">                Transport chosen = TransportHelper.selectBestTransport(transports, transportMode, transportPriority);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">                if (chosen != null) {</span>
+<span class="fc" id="L103">                    chosenOutboundLegs = Collections.singletonList(chosen);</span>
+                }
+            }
+        }
+
+        // If user explicitly requested a transport mode but none matched, we cannot build a package
+<span class="pc bpc" id="L109" title="1 of 6 branches missed.">        if (transportMode != null &amp;&amp; !transportMode.isBlank() &amp;&amp; chosenOutboundLegs == null) {</span>
+<span class="fc" id="L110">            return Collections.emptyList();</span>
+        }
+
+        // Find return transports (destination -&gt; departure)
+        // Note: For return trip, we don't enforce strict mode matching if outbound had a preference
+        // This allows packages where outbound is TRAIN but return is PLANE if no TRAIN available
+<span class="fc" id="L116">        List&lt;Transport&gt; returnTransports = transportService.findTransports(destinationCity, departureCity, returnDateTime, null);</span>
+<span class="fc" id="L117">        List&lt;Transport&gt; chosenReturnLegs = null;</span>
+        
+<span class="pc bpc" id="L119" title="1 of 4 branches missed.">        if (returnTransports != null &amp;&amp; !returnTransports.isEmpty()) {</span>
+            // Check if return transports represent a multi-leg solution
+<span class="fc bfc" id="L121" title="All 2 branches covered.">            if (TransportHelper.isMultiLeg(returnTransports)) {</span>
+                // This is a multi-leg solution - use directly without strict mode validation for return
+<span class="fc" id="L123">                chosenReturnLegs = returnTransports;</span>
+            } else {
+                // These are direct transport options - select best one
+                // Prefer transportMode if available, but accept any mode if not found
+<span class="fc" id="L127">                Transport chosen = TransportHelper.selectBestTransport(returnTransports, transportMode, transportPriority);</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">                if (chosen == null) {</span>
+                    // If preferred mode not found, take any available transport
+<span class="fc" id="L130">                    chosen = TransportHelper.selectBestTransport(returnTransports, null, transportPriority);</span>
+                }
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">                if (chosen != null) {</span>
+<span class="fc" id="L133">                    chosenReturnLegs = Collections.singletonList(chosen);</span>
+                }
+            }
+        }
+
+        // 5) Filter hotels by minHotelRating (defensive) and choose according to hotelPriority
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        if (minHotelRating &gt; 0) {</span>
+<span class="fc" id="L140">            List&lt;Hotel&gt; filteredHotels = hotels.stream()</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">                    .filter(h -&gt; h != null)</span>
+<span class="fc" id="L142">                    .filter(h -&gt; {</span>
+                        try {
+<span class="fc bfc" id="L144" title="All 2 branches covered.">                            return h.getRating() &gt;= minHotelRating;</span>
+<span class="nc" id="L145">                        } catch (Exception e) {</span>
+<span class="nc" id="L146">                            return false;</span>
+                        }
+                    })
+<span class="fc" id="L149">                    .collect(Collectors.toList());</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">            if (filteredHotels.isEmpty()) {</span>
+<span class="fc" id="L151">                return Collections.emptyList();</span>
+            }
+<span class="fc" id="L153">            hotels = filteredHotels;</span>
+        }
+
+        // 5) Choose hotel according to hotelPriority
+<span class="fc" id="L157">        Hotel chosenHotel = hotels.get(0);</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">        if (&quot;PRICE&quot;.equalsIgnoreCase(hotelPriority)) {</span>
+<span class="fc" id="L159">            chosenHotel = hotels.stream().min(Comparator.comparingDouble(Hotel::getPricePerNight)).orElse(chosenHotel);</span>
+<span class="pc bpc" id="L160" title="3 of 4 branches missed.">        } else if (&quot;STAR&quot;.equalsIgnoreCase(hotelPriority) || &quot;RATING&quot;.equalsIgnoreCase(hotelPriority)) {</span>
+<span class="fc" id="L161">            chosenHotel = hotels.stream().max(Comparator.comparingInt(Hotel::getRating)).orElse(chosenHotel);</span>
+        }
+
+
+        // Geocode hotel to pass coordinates to ActivityService so it can filter by distance
+<span class="fc" id="L166">        Coordinates hotelLocation = null;</span>
+        try {
+<span class="pc bpc" id="L168" title="1 of 4 branches missed.">            if (chosenHotel != null &amp;&amp; chosenHotel.getAddress() != null) {</span>
+<span class="fc" id="L169">                String fullAddress = chosenHotel.getAddress() + &quot;, &quot; + chosenHotel.getCity();</span>
+<span class="fc" id="L170">                String hotelKey = fullAddress.toLowerCase();</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">                if (geocodeCache.containsKey(hotelKey)) {</span>
+<span class="fc" id="L172">                    hotelLocation = geocodeCache.get(hotelKey);</span>
+                } else {
+<span class="fc" id="L174">                    hotelLocation = geocodingService.geocode(fullAddress);</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">                    if (hotelLocation != null) geocodeCache.put(hotelKey, hotelLocation);</span>
+                }
+            }
+<span class="nc" id="L178">        } catch (Exception ignored) {</span>
+            // If geocoding fails, leave hotelLocation null and delegate filtering responsibility to calling code
+<span class="fc" id="L180">        }</span>
+
+        // Enforce min hotel rating strictly: if chosen hotel does not meet the minimum, cannot build package
+<span class="pc bpc" id="L183" title="1 of 4 branches missed.">        if (chosenHotel != null &amp;&amp; minHotelRating &gt; 0) {</span>
+            try {
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">                if (chosenHotel.getRating() &lt; minHotelRating) {</span>
+<span class="nc" id="L186">                    return Collections.emptyList();</span>
+                }
+<span class="nc" id="L188">            } catch (Exception ignored) {</span>
+<span class="nc" id="L189">                return Collections.emptyList();</span>
+<span class="fc" id="L190">            }</span>
+        }
+
+        // Ask activityService to return activities already filtered by distance if possible
+<span class="fc" id="L194">        List&lt;Activity&gt; candidateActivities = activityService.findActivities(destinationCity, activityCategories, null, Double.MAX_VALUE, hotelLocation, maxDistanceKm);</span>
+
+        // First, filter candidateActivities by distance using distanceService (call mocked in tests)
+<span class="fc" id="L197">        List&lt;Activity&gt; withinDistance = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L198" title="1 of 4 branches missed.">        if (candidateActivities != null &amp;&amp; !candidateActivities.isEmpty()) {</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">            for (Activity a : candidateActivities) {</span>
+<span class="fc" id="L200">                Coordinates activityCoord = null;</span>
+                try {
+<span class="fc bfc" id="L202" title="All 2 branches covered.">                    if (a.getAddress() != null) {</span>
+<span class="fc" id="L203">                        String key = (a.getAddress() + &quot;, &quot; + a.getCity()).toLowerCase();</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">                        if (geocodeCache.containsKey(key)) {</span>
+<span class="fc" id="L205">                            activityCoord = geocodeCache.get(key);</span>
+                        } else {
+<span class="fc" id="L207">                            activityCoord = geocodingService.geocode(a.getAddress() + &quot;, &quot; + a.getCity());</span>
+<span class="pc bpc" id="L208" title="1 of 2 branches missed.">                            if (activityCoord != null) geocodeCache.put(key, activityCoord);</span>
+                        }
+                    }
+<span class="nc" id="L211">                } catch (Exception ignored) {</span>
+                    // ignore geocoding failure for this activity; we'll try distance check anyway
+<span class="fc" id="L213">                }</span>
+                // Attempt distance calculation
+                // If hotel location is available, check distance
+                // If hotel geocoding failed (hotelLocation==null), still try with activity coords
+                try {
+<span class="fc" id="L218">                    double d = distanceService.calculateDistance(hotelLocation, activityCoord);</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">                    if (d &lt;= maxDistanceKm) {</span>
+<span class="fc" id="L220">                        withinDistance.add(a);</span>
+                    }
+<span class="nc" id="L222">                } catch (Exception e) {</span>
+                    // if distance calculation fails (throws exception), exclude activity
+                    // This ensures activities are excluded when distanceService.calculateDistance throws
+<span class="fc" id="L225">                }</span>
+<span class="fc" id="L226">            }</span>
+        }
+
+        // Remove activities with duplicate dates (keep first) and select within budget greedily
+<span class="fc" id="L230">        List&lt;Activity&gt; filtered = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">        if (!withinDistance.isEmpty()) {</span>
+<span class="fc" id="L232">            Set&lt;java.time.LocalDate&gt; seenDates = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L233">            List&lt;Activity&gt; uniqueByDate = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">            for (Activity a : withinDistance) {</span>
+<span class="fc" id="L235">                java.time.LocalDate date = a.getDate();</span>
+<span class="fc bfc" id="L236" title="All 4 branches covered.">                if (date == null || !seenDates.contains(date)) {</span>
+<span class="fc" id="L237">                    uniqueByDate.add(a);</span>
+<span class="fc bfc" id="L238" title="All 2 branches covered.">                    if (date != null) seenDates.add(date);</span>
+                }
+<span class="fc" id="L240">            }</span>
+
+<span class="fc" id="L242">            double transportCostEstimate = 0.0;</span>
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">            if (chosenOutboundLegs != null) transportCostEstimate = chosenOutboundLegs.stream().mapToDouble(Transport::getPrice).sum();</span>
+<span class="fc" id="L244">            double returnTransportCostEstimate = 0.0;</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">            if (chosenReturnLegs != null) returnTransportCostEstimate = chosenReturnLegs.stream().mapToDouble(Transport::getPrice).sum();</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">            double hotelCostEstimate = chosenHotel != null ? chosenHotel.getPricePerNight() * tripDurationDays : 0.0;</span>
+<span class="fc" id="L247">            double activitiesBudget = maxBudget - (transportCostEstimate + returnTransportCostEstimate) - hotelCostEstimate;</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">            if (activitiesBudget &lt; 0) activitiesBudget = 0.0;</span>
+
+<span class="fc" id="L250">            List&lt;Activity&gt; sorted = uniqueByDate.stream()</span>
+<span class="fc" id="L251">                    .sorted(Comparator.comparingDouble(Activity::getPrice))</span>
+<span class="fc" id="L252">                    .collect(Collectors.toList());</span>
+<span class="fc" id="L253">            double sum = 0.0;</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">            for (Activity a : sorted) {</span>
+<span class="fc" id="L255">                double price = a.getPrice();</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">                if (sum + price &lt;= activitiesBudget) {</span>
+<span class="fc" id="L257">                    filtered.add(a);</span>
+<span class="fc" id="L258">                    sum += price;</span>
+                }
+<span class="fc" id="L260">            }</span>
+        }
+
+        // Assemble package
+<span class="fc" id="L264">        Package pkg = new Package();</span>
+<span class="fc" id="L265">        pkg.setHotel(chosenHotel);</span>
+<span class="fc" id="L266">        pkg.setActivities(filtered);</span>
+
+<span class="fc" id="L268">        Trip outbound = new Trip();</span>
+<span class="pc bpc" id="L269" title="1 of 2 branches missed.">        if (chosenOutboundLegs != null) outbound.setTransports(chosenOutboundLegs);</span>
+<span class="fc" id="L270">        pkg.setOutboundTrip(outbound);</span>
+
+        // Build a minimal return trip using chosenReturnTransport if available
+<span class="fc bfc" id="L273" title="All 2 branches covered.">        if (chosenReturnLegs != null) {</span>
+<span class="fc" id="L274">            Trip returnTrip = new Trip();</span>
+<span class="fc" id="L275">            returnTrip.setTransports(chosenReturnLegs);</span>
+<span class="fc" id="L276">            pkg.setReturnTrip(returnTrip);</span>
+        }
+
+        // Validate correspondence times: ensure outbound arrival is before return departure
+        try {
+<span class="pc bpc" id="L281" title="1 of 4 branches missed.">            if (pkg.getOutboundTrip() != null &amp;&amp; pkg.getReturnTrip() != null) {</span>
+<span class="fc" id="L282">                java.time.LocalDateTime lastArrival = pkg.getOutboundTrip().getTransports().stream()</span>
+<span class="fc" id="L283">                    .map(Transport::getArrivalDateTime)</span>
+<span class="fc" id="L284">                    .filter(Objects::nonNull)</span>
+<span class="fc" id="L285">                    .max(java.util.Comparator.naturalOrder())</span>
+<span class="fc" id="L286">                    .orElse(null);</span>
+<span class="fc" id="L287">                java.time.LocalDateTime firstReturnDepart = pkg.getReturnTrip().getTransports().stream()</span>
+<span class="fc" id="L288">                    .map(Transport::getDepartureDateTime)</span>
+<span class="fc" id="L289">                    .filter(Objects::nonNull)</span>
+<span class="fc" id="L290">                    .min(java.util.Comparator.naturalOrder())</span>
+<span class="fc" id="L291">                    .orElse(null);</span>
+<span class="pc bpc" id="L292" title="2 of 6 branches missed.">                if (lastArrival != null &amp;&amp; firstReturnDepart != null &amp;&amp; !lastArrival.isBefore(firstReturnDepart)) {</span>
+                    // invalid correspondence (return departs before/outbound arrival) -&gt; cannot build
+<span class="nc" id="L294">                    return Collections.emptyList();</span>
+                }
+            }
+<span class="nc" id="L297">        } catch (Exception ignored) {</span>
+            // if we cannot validate times, be permissive and continue
+<span class="fc" id="L299">        }</span>
+
+        // Check overall budget: if total price exceeds maxBudget, add error but still return package
+<span class="fc" id="L302">        double totalPrice = pkg.getTotalPrice(tripDurationDays);</span>
+<span class="fc bfc" id="L303" title="All 2 branches covered.">        if (totalPrice &gt; maxBudget) {</span>
+<span class="fc" id="L304">            pkg.addError(&quot;Budget exceeded: total price &quot; + totalPrice + &quot; exceeds maximum budget &quot; + maxBudget);</span>
+        }
+
+<span class="fc" id="L307">        return Collections.singletonList(pkg);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

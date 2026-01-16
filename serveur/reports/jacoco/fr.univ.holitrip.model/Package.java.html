@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Package.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Holitrip</a> &gt; <a href="index.source.html" class="el_package">fr.univ.holitrip.model</a> &gt; <span class="el_source">Package.java</span></div><h1>Package.java</h1><pre class="source lang-java linenums">package fr.univ.holitrip.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Represents a complete travel package.
+ * 
+ * Example: Bordeaux -&gt; Lyon, 3 days, 1000€ budget
+ *   - Outbound trip: Bordeaux -&gt; Lyon
+ *   - Return trip: Lyon -&gt; Bordeaux
+ *   - Hotel: Grand Hotel Lyon (3 nights)
+ *   - Activities: Museum, Concert, Restaurant
+ *   - Errors: list of encountered errors (if any)
+ */
+
+public class Package {
+    private Trip outboundTrip;
+    private Trip returnTrip;
+    private Hotel hotel;
+    private List&lt;Activity&gt; activities;
+    private List&lt;String&gt; errors;
+
+<span class="fc" id="L24">    public Package() {</span>
+<span class="fc" id="L25">        this.activities = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L26">        this.errors = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L27">    }</span>
+
+    public Package(Trip outboundTrip, Trip returnTrip, Hotel hotel, 
+<span class="fc" id="L30">                    List&lt;Activity&gt; activities, List&lt;String&gt; errors) {</span>
+<span class="fc" id="L31">        this.outboundTrip = outboundTrip;</span>
+<span class="fc" id="L32">        this.returnTrip = returnTrip;</span>
+<span class="fc" id="L33">        this.hotel = hotel;</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        this.activities = activities != null ? activities : new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">        this.errors = errors != null ? errors : new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L36">    }</span>
+
+    public Trip getOutboundTrip() {
+<span class="fc" id="L39">        return outboundTrip;</span>
+    }
+
+    public void setOutboundTrip(Trip outboundTrip) {
+<span class="fc" id="L43">        this.outboundTrip = outboundTrip;</span>
+<span class="fc" id="L44">    }</span>
+
+    public Trip getReturnTrip() {
+<span class="fc" id="L47">        return returnTrip;</span>
+    }
+
+    public void setReturnTrip(Trip returnTrip) {
+<span class="fc" id="L51">        this.returnTrip = returnTrip;</span>
+<span class="fc" id="L52">    }</span>
+
+    public Hotel getHotel() {
+<span class="fc" id="L55">        return hotel;</span>
+    }
+
+    public void setHotel(Hotel hotel) {
+<span class="fc" id="L59">        this.hotel = hotel;</span>
+<span class="fc" id="L60">    }</span>
+
+    public List&lt;Activity&gt; getActivities() {
+<span class="fc" id="L63">        return activities;</span>
+    }
+
+    public void setActivities(List&lt;Activity&gt; activities) {
+<span class="fc" id="L67">        this.activities = activities;</span>
+<span class="fc" id="L68">    }</span>
+
+    public List&lt;String&gt; getErrors() {
+<span class="fc" id="L71">        return errors;</span>
+    }
+
+    public void setErrors(List&lt;String&gt; errors) {
+<span class="nc" id="L75">        this.errors = errors;</span>
+<span class="nc" id="L76">    }</span>
+
+    /**
+     * Calculates the total price of the package.
+     * Includes outbound trip + return trip + hotel (nights) + all activities.
+     * 
+     * @param nights number of nights at the hotel
+     * @return total price in euros
+     */
+    public double getTotalPrice(int nights) {
+<span class="fc" id="L86">        double totalPrice = 0.0;</span>
+
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (outboundTrip != null) {</span>
+<span class="fc" id="L89">            totalPrice += outboundTrip.getTotalPrice();</span>
+        }
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (returnTrip != null) {</span>
+<span class="fc" id="L92">            totalPrice += returnTrip.getTotalPrice();</span>
+        }
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (hotel != null) {</span>
+<span class="fc" id="L95">            totalPrice += hotel.getPricePerNight() * nights;</span>
+        }
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        for (Activity activity : activities) {</span>
+<span class="fc" id="L98">            totalPrice += activity.getPrice();</span>
+<span class="fc" id="L99">        }</span>
+
+<span class="fc" id="L101">        return totalPrice;</span>
+    }
+
+    /**
+     * Checks if the package is valid.
+     * A package is valid if it has no errors and contains all essential elements.
+     * 
+     * @return true if valid (no errors, has trips and hotel), false otherwise
+     */
+    public boolean isValid() {
+<span class="fc bfc" id="L111" title="All 8 branches covered.">        return errors.isEmpty() </span>
+            &amp;&amp; outboundTrip != null 
+            &amp;&amp; returnTrip != null 
+            &amp;&amp; hotel != null;
+    }
+
+    /**
+     * Adds an error message to the package.
+     * Used when something goes wrong during package creation.
+     * 
+     * @param error the error message to add
+     */
+    public void addError(String error) {
+<span class="fc" id="L124">        this.errors.add(error);</span>
+<span class="fc" id="L125">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L129">        return &quot;Package{&quot; +</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">                &quot;outbound=&quot; + (outboundTrip != null ? outboundTrip.toString() : &quot;null&quot;) +</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">                &quot;, return=&quot; + (returnTrip != null ? returnTrip.toString() : &quot;null&quot;) +</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">                &quot;, hotel=&quot; + (hotel != null ? hotel.getName() : &quot;null&quot;) +</span>
+<span class="fc" id="L133">                &quot;, activities=&quot; + activities.size() +</span>
+<span class="fc" id="L134">                &quot;, errors=&quot; + errors.size() +</span>
+<span class="fc" id="L135">                &quot;, valid=&quot; + isValid() +</span>
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

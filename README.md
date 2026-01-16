@@ -1,74 +1,37 @@
 # Projet Holitrip - Application de Planification de Séjours
 
-## 1. Membres de l'équipe
+## Membres de l'équipe
 - Mohamed Dyae CHELLAF
 - Mohamed Taha SANDI
 - Mohamed Reda EL KHADER
+- Mathieu MOREL
 
 ---
 
-## 2. Architecture de l'application
+## Architecture de l'application
 
-### Vue d'ensemble
-L'application Holitrip permet de planifier des séjours complets incluant transports (directs ou multi-correspondances), hôtels et activités selon les préférences utilisateur. L'application implémente un algorithme de recherche BFS (Breadth-First Search) pour trouver les trajets optimaux avec jusqu'à 3 correspondances, en respectant un temps de correspondance minimum de 60 minutes et l'homogénéité du mode de transport.
+L'application Holitrip permet de planifier des séjours complets incluant transports (directs ou multi-correspondances), hôtels et activités selon les préférences utilisateur. L'architecture repose sur l'injection de dépendances avec des interfaces et implémentations séparées pour faciliter les tests unitaires avec doublures.
 
-### Composants principaux
+### Services
 
-#### Interfaces de services
-- `TransportService` : Recherche de transports (train/avion) directs ou multi-correspondances
-- `HotelService` : Recherche d'hôtels avec notes (1-5 étoiles)
-- `ActivityService` : Recherche d'activités par catégorie et distance maximale
-- `GeocodingService` : Conversion adresses → coordonnées GPS
-- `DistanceService` : Calcul de distances géographiques (formule d'Haversine)
-- `PackageService` : Assemblage de forfaits complets respectant critères et budget
+| Interface | Implémentation | Responsabilité |
+|-----------|----------------|----------------|
+| `TransportService` | `JsonTransportService` | Recherche de transports avec algorithme BFS (max 3 legs, 60min connexion, homogénéité mode) |
+| `HotelService` | `JsonHotelService` | Recherche d'hôtels par ville, note minimale et prix |
+| `ActivityService` | `JsonActivityService` | Recherche d'activités avec filtrage par catégorie et distance |
+| `GeocodingService` | `ApiGeocodingService` | Conversion adresses → coordonnées GPS (API geocode.maps.co) |
+| `DistanceService` | `HaversineDistanceService` | Calcul de distance à vol d'oiseau (formule d'Haversine) |
+| `PackageService` | `PackageBuilder` | Assemblage des forfaits complets selon critères utilisateur |
 
-#### Implémentations
-- **`JsonTransportService`** : Recherche de transports avec algorithme BFS pour multi-correspondances (MAX_LEGS=3, connection time=60min)
-- **`JsonHotelService`** : Lecture des hôtels depuis JSON avec filtrage par note minimale
-- **`JsonActivityService`** : Lecture des activités avec filtrage par catégorie et distance
-- **`ApiGeocodingService`** : Utilise l'API externe geocode.maps.co pour géolocalisation
-- **`HaversineDistanceService`** : Calcul de distance à vol d'oiseau entre coordonnées GPS
-- **`PackageBuilder`** : Orchestrateur principal assemblant transports, hôtels et activités selon critères utilisateur
+### Classe utilitaire
+- **`TransportHelper`** : Validation des correspondances (isValidConnection, isSameMode, getTripDuration)
 
-#### Modèles de données
-- **`Transport`** : Ville départ/arrivée, date, heure, mode (TRAIN/PLANE), prix
-- **`Hotel`** : Nom, adresse, note (1-5), prix par nuit
-- **`Activity`** : Nom, adresse, date, catégorie, prix
-- **`Trip`** : Trajet complet (1 à 3 transports pour aller ou retour)
-- **`Package`** : Forfait complet avec hôtel, trajets aller-retour, activités, prix total
-- **`Coordinates`** : Latitude/Longitude GPS
-- **`GeocodingException`** : Exception spécifique pour erreurs de géocodage
-
-### Fonctionnalités principales
-
-#### Transports multi-correspondances
-- **Algorithme BFS** : Recherche du chemin le plus court avec jusqu'à 3 correspondances
-- **Correspondances** : Minimum 60 minutes entre deux transports consécutifs
-- **Homogénéité** : Un trajet complet utilise un seul mode (TRAIN ou PLANE)
-- **Priorités** : Prix minimum ou durée minimale selon préférence utilisateur
-
-#### Sélection d'hôtel
-- Filtrage par note minimale (1-5 étoiles)
-- Priorité prix ou priorité note maximale
-- Vérification disponibilité pour la durée du séjour
-
-#### Activités
-- Filtrage par catégories (CULTURE, SPORT, MUSIQUE, etc.)
-- Filtrage par distance maximale depuis l'hôtel
-- Maximisation du nombre d'activités dans le budget
-- Vérification unicité des dates (pas 2 activités le même jour)
-
-### Données
-Les données sont stockées dans `src/main/resources/data/` :
-- **`transports.json`** : Trajets directs et multi-legs (Paris, Nice, Bordeaux, Toulouse, Marseille, Tours)
-- **`hotels.json`** : Hôtels avec adresses réelles géolocalisables
-- **`activities.json`** : Activités culturelles, sportives et musicales avec dates
-
-La clé API pour le géocodage est dans `src/main/resources/application.properties`.
+### Modèles
+- `Transport`, `Trip`, `Hotel`, `Activity`, `Package`, `Coordinates`
 
 ---
 
-## 3. Manuel d'utilisation
+## Manuel d'utilisation
 
 ### Prérequis
 - Java 17 ou supérieur
@@ -79,200 +42,53 @@ La clé API pour le géocodage est dans `src/main/resources/application.properti
 
 ### 1. Compilation du projet
 ```bash
-cd serveur
 mvn clean compile
 ```
-**Résultat attendu** : `BUILD SUCCESS`
 
-### 2. Exécution des tests unitaires
+### Tests unitaires (107 tests)
 ```bash
 mvn test -DskipITs
 ```
-**Résultat attendu** : `Tests run: 35, Failures: 0, Errors: 0, Skipped: 0`
 
-Les tests unitaires vérifient chaque service isolément en utilisant des doublures (mocks/stubs) pour simuler les dépendances externes. Ils couvrent :
-- Recherche de transports (directs et multi-correspondances)
-- Sélection d'hôtels avec filtrage par note
-- Filtrage d'activités par catégorie et distance
-- Calcul de distances géographiques
-- Géocodage avec gestion d'erreurs
-- Assemblage de packages selon critères et budget
-
-### 3. Exécution des tests d'intégration
+### Tests d'intégration (17 tests)
 ```bash
 mvn verify
 ```
-ou
+
+### Rapport de couverture JaCoCo
 ```bash
-mvn integration-test
+mvn clean test jacoco:report
 ```
-**Résultat attendu** : Tests unitaires (35) + tests d'intégration (8) exécutés avec succès
+Rapport : `target/site/jacoco/index.html`
 
-Les tests d'intégration (*IT.java) vérifient les scénarios bout-en-bout avec tous les services réels :
-- **IntegrationMultiLegTransportIT** : Vérifie les trajets 2 et 3 correspondances
-- **IntegrationTransportModeHomogeneityIT** : Vérifie homogénéité TRAIN ou PLANE par trajet
-- **IntegrationPricePriorityIT** : Vérifie priorisation prix si critère demandé
-- **IntegrationDurationPriorityIT** : Vérifie priorisation durée si critère demandé
-- **IntegrationHotelRatingPriorityIT** : Vérifie filtrage par note minimale et priorisation
-- **IntegrationActivityDistanceFilterIT** : Vérifie filtrage activités par distance max
-- **IntegrationUniqueActivityDateIT** : Vérifie unicité des dates d'activités
-- **IntegrationInsufficientBudgetIT** : Vérifie gestion budget insuffisant
-
-### 4. Production du rapport de couverture JaCoCo
-```bash
-mvn clean test
-```
-Le rapport est automatiquement généré dans : `target/site/jacoco/index.html`
-
-**Ouverture du rapport :**
-```bash
-# Linux
-xdg-open target/site/jacoco/index.html
-
-# macOS
-open target/site/jacoco/index.html
-
-# Windows
-start target/site/jacoco/index.html
-```
-
-### 5. Production du rapport d'analyse par mutation PIT
+### Rapport de mutation PIT
 ```bash
 mvn org.pitest:pitest-maven:mutationCoverage
 ```
-Le rapport est généré dans : `target/pit-reports/YYYYMMDDHHMI/index.html`
+Rapport : `target/pit-reports/*/index.html`
 
-**Pour trouver et ouvrir le dernier rapport :**
-```bash
-LATEST=$(ls -t target/pit-reports/ | head -1)
-xdg-open target/pit-reports/$LATEST/index.html
-```
-
-### 6. Exécution de l'application
-
-#### Scénarios de démonstration disponibles
-
-L'application fournit 6 programmes de démonstration dans `fr.univ.holitrip` :
-
-1. **HolitripMain** : Scénario basique Bordeaux→Paris, 3 jours, budget 600€
-2. **HolitripMain2** : Scénario avec contraintes strictes (durée prioritaire)
-3. **HolitripMain3** : Scénario multi-activités avec budget large
-4. **HolitripMain4** : Scénario avion uniquement
-5. **HolitripMain5** : Démonstration trajet 2 correspondances (Tours→Paris→Nice)
-6. **HolitripMain6** : Démonstration trajet 3 correspondances (Bordeaux→Toulouse→Marseille→Nice)
-
-#### Exécution avec Maven (recommandé)
-
-**Scénario par défaut (HolitripMain) :**
+### Exécution de l'application
 ```bash
 mvn exec:java -Dexec.mainClass="fr.univ.holitrip.HolitripMain"
-```
-
-**Autres scénarios :**
-```bash
-# Trajet 2 correspondances
-mvn exec:java -Dexec.mainClass="fr.univ.holitrip.HolitripMain5"
-
-# Trajet 3 correspondances
-mvn exec:java -Dexec.mainClass="fr.univ.holitrip.HolitripMain6"
-```
-
-#### Exemple de sortie (HolitripMain - Bordeaux→Paris)
-```
---- Holitrip Full Demo ---
-Using real ApiGeocodingService (geocode.maps.co API).
-Scenario: Bordeaux -> Paris, 2025-01-15, 3 days, budget=600.0
-
-Found 1 package(s):
-
---- Package #1 ---
-Hotel: Hôtel Campanile Paris Est (3 stars, 70€/night)
-  Address: 12 rue de l'Est, Paris, France
-  Coordinates: (48.8566, 2.3522)
-
-Outbound trip (1 leg, TRAIN):
-  1. TRAIN Bordeaux→Paris 08:00-10:00 (80€)
-
-Return trip (1 leg, TRAIN):
-  1. TRAIN Paris→Bordeaux 18:00-20:00 (75€)
-
-Activities (2 selected):
-  - Musée du Louvre (CULTURE, 17€, 3.2 km from hotel)
-  - Tour Eiffel (CULTURE, 26€, 4.8 km from hotel)
-
-Total price: 483.0€ (within budget: 600.0€)
-```
-
-#### Exemple avec multi-correspondances (HolitripMain6 - Bordeaux→Nice)
-```
-Outbound trip (3 legs, TRAIN):
-  1. TRAIN Bordeaux→Toulouse 08:00-09:30 (40€)
-     [Connection time: 90 minutes]
-  2. TRAIN Toulouse→Marseille 11:00-13:30 (55€)
-     [Connection time: 90 minutes]
-  3. TRAIN Marseille→Nice 15:00-18:00 (55€)
-
-Total: 150€, 10h00 duration, 3 correspondences
+mvn exec:java -Dexec.mainClass="fr.univ.holitrip.HolitripMain2"
 ```
 
 ---
 
-## 4. Rapport de couverture de code
+## Scores de tests
 
-### Scores globaux (JaCoCo - dernière exécution)
-- **Instructions** : 63.4%
-- **Branches** : 45.4%
-- **Lignes** : 62.8%
-- **Méthodes** : 72.6%
+### Couverture JaCoCo
+- **Instructions** : 93% (1809/1936)
+- **Branches** : 78% (253/322)
+- **Lignes** : 91% (409/451)
+- **Méthodes** : 97% (58/60)
+- **Classes analysées** : 13 (exclusion HolitripMain* et DTOs)
 
-### Détails par package
-
-#### 1. **fr.univ.holitrip** (Classes Main)
-- **Couverture** : 0%
-- **Justification** : Les 6 classes HolitripMain (Main, Main2-6) sont des points d'entrée CLI non testés unitairement par conception. Elles servent uniquement à démontrer l'application et sont testées manuellement.
-
-#### 2. **fr.univ.holitrip.service.impl** (Implémentations des services)
-- **Couverture** : 78% instructions, 53% branches
-- **Détails** :
-  - **JsonTransportService** : 85% instructions - Bonne couverture de l'algorithme BFS multi-leg
-  - **PackageBuilder** : 75% instructions - Logique d'assemblage bien testée
-  - **ApiGeocodingService** : 82% instructions - Gestion d'erreurs API couverte
-  - **HaversineDistanceService** : 100% instructions - Formule mathématique simple
-  - **JsonHotelService** : 88% instructions - Filtrage et priorisation testés
-  - **JsonActivityService** : 70% instructions - Logique de distance et catégorie couverte
-
-#### 3. **fr.univ.holitrip.model** (DTOs et modèles)
-- **Couverture** : 65% instructions, 53% branches
-- **Justification** : Les getters/setters triviaux et constructeurs par défaut ne sont pas tous couverts. Les méthodes métier importantes (equals, hashCode, toString utilisés) sont testées.
-
-#### 4. **fr.univ.holitrip.exception**
-- **Couverture** : 100%
-- **Détails** : GeocodingException entièrement couverte avec tests des constructeurs et messages.
-
-#### 5. **fr.univ.holitrip.service** (Interfaces)
-- **Couverture** : N/A
-- **Justification** : Interfaces Java sans implémentation, non comptabilisées dans la couverture.
-
-### Justifications des parties non couvertes
-
-#### Code non critique (acceptable)
-- **Classes Main** (0%) : Points d'entrée CLI testés manuellement, pas de logique métier
-- **Getters/setters triviaux** : Accesseurs automatiques dans les DTOs (Activity, Hotel, Transport, etc.)
-- **Constructeurs vides** : Requis par les frameworks de sérialisation JSON
-
-#### Branches d'erreur difficiles à tester
-- **Exceptions réseau** : Certains catch blocks pour IOException dans ApiGeocodingService nécessiteraient des mocks complexes de HttpClient
-- **Erreurs de parsing JSON** : Branches catch pour JSONException dans les services JSON (nécessiteraient des fichiers JSON corrompus)
-- **Conditions limites rares** : Certaines validations défensives (null checks multiples) dans des chemins peu probables
-
-#### Améliorations possibles
-Pour atteindre >80% de couverture d'instructions :
-1. Ajouter des tests pour les branches d'erreur (IOException, JSONException)
-2. Tester les getters/setters des DTOs avec des tests dédiés
-3. Mocker HttpClient pour simuler erreurs réseau dans ApiGeocodingService
-4. Ajouter des tests pour les cas limites (listes vides, valeurs nulles, etc.)
-
-**Conclusion** : La couverture actuelle de 63.4% instructions et 45.4% branches est satisfaisante pour le code métier critique. Les parties non couvertes sont principalement du code trivial (accesseurs), des points d'entrée non testables unitairement (main), ou des branches d'erreur complexes à reproduire.
+### Mutation PIT
+- **Mutations générées** : 281
+- **Mutations tuées** : 215 (77%)
+- **Test strength** : 81%
+- **Couverture lignes mutées** : 90% (398/442)
 
 ---
 
@@ -378,136 +194,57 @@ Le score apparent de 19% est trompeur car :
 
 **Score corrigé** : Si on exclut les 6 Main, le taux de mutation serait environ 116/(608-400) ≈ **56%**, ce qui est un score acceptable pour une première itération.
 
-### Améliorations recommandées (par priorité)
-
-#### Priorité 1 : Tuer les mutants RemoveConditionalMutator (22 survivants)
-- Ajouter des tests couvrant explicitement les branches if/else
-- Vérifier comportement quand conditions sont vraies ET fausses
-- Impact : +10-15% de score de mutation
-
-#### Priorité 2 : Améliorer tests de ReturnValsMutator (21 survivants)
-- Assertions plus précises sur les valeurs retournées
-- Tester les cas limites (valeurs 0, négatives, maximales)
-- Impact : +8-12% de score de mutation
-
-#### Priorité 3 : Tester les bornes (ConditionalsBoundaryMutator)
-- Ajouter tests avec valeurs exactement à la limite (60 min, distances exactes, etc.)
-- Vérifier comportements < et ≤, > et ≥
-- Impact : +5-8% de score de mutation
-
-#### Priorité 4 : Robustifier tests arithmétiques (MathMutator)
-- Tester calculs de prix avec différentes combinaisons
-- Vérifier formule Haversine avec coordonnées variées
-- Tester durées de trajets calculées
-- Impact : +3-5% de score de mutation
-
-**Temps estimé** : 3-4 heures pour implémenter Priorités 1-2, score attendu : 35-40%
-
-### Conclusion
-
-Le score de mutation actuel reflète principalement l'absence volontaire de tests unitaires pour les classes Main (63% des mutants). Sur le code métier effectivement testé, le test strength de 52% est raisonnable mais perfectible. Les mutants survivants révèlent des opportunités d'amélioration ciblées, notamment :
-- Couverture complète des branches conditionnelles
-- Assertions plus précises sur les valeurs retournées
-- Tests des valeurs limites et cas arithmétiques
-
-Ces améliorations permettraient d'atteindre un score de 35-40% global (ou ~70% sur code testé) avec un effort supplémentaire limité.
 
 ---
+### Arborescence
 
-## 6. Difficultés rencontrées et évaluation personnelle
-
-### 1. Implémentation de l'algorithme multi-correspondances
-**Problème** : La spécification demandait des trajets en plusieurs étapes, mais l'approche naïve (boucles imbriquées) ne permettait que 2 correspondances maximum et ne gérait pas les cycles.
-
-**Solution adoptée** : Implémentation d'un algorithme BFS (Breadth-First Search) dans JsonTransportService :
-- Recherche systématique du chemin le plus court (nombre minimum de correspondances)
-- Détection de cycles avec HashSet de villes visitées
-- Support configurable jusqu'à MAX_LEGS=3 correspondances
-- Vérification automatique du temps de correspondance (60 minutes minimum)
-- Garantie d'homogénéité du mode de transport (TRAIN ou PLANE uniquement)
-
-**Temps** : 4-5 heures pour conception, implémentation et tests
-
-### 2. Géocodage avec API externe
-**Problème** : L'API geocode.maps.co peut :
-- Retourner 429 (Too Many Requests) si trop d'appels rapides
-- Retourner 404 pour adresses non reconnues
-- Être indisponible temporairement
-- Nécessiter une clé API configurée
-
-**Solutions implémentées** :
-- Injection de dépendances pour GeocodingService → permet tests sans API réelle
-- Stub déterministe `TestGeocodingService` pour tests unitaires
-- Gestion robuste des erreurs avec GeocodingException
-- Cache implicite dans les tests (coordonnées pré-calculées dans JSON de test)
-- Configuration API key via application.properties
-
-**Temps** : 2-3 heures pour gestion d'erreurs et tests
-
-### 3. Filtrage d'activités par distance
-**Problème** : Pour filtrer les activités par distance maximale depuis l'hôtel :
-1. Il faut géocoder l'adresse de l'hôtel ET toutes les activités
-2. Cela multiplie les appels API (risque de rate limiting)
-3. Certaines adresses peuvent échouer à la géolocalisation
-
-**Solutions adoptées** :
-- Géocodage uniquement des activités pertinentes (catégorie déjà filtrée)
-- Gestion gracieuse des échecs : activité ignorée si géocodage échoue
-- Dans les tests : utilisation du stub déterministe (pas d'appels API)
-- Calcul de distance avec formule d'Haversine (simple et rapide)
-
-**Temps** : 2 heures pour logique + gestion erreurs
-
-### 4. Couverture de branches conditionnelles
-**Problème** : Nombreuses branches difficiles à couvrir :
-- Gestion d'erreurs réseau (IOException, HttpException)
-- Parsing JSON corrompu (JSONException)
-- Cas limites combinatoires (budget exact, durée exacte, etc.)
-- Conditions imbriquées complexes dans PackageBuilder
-
-**Approche** :
-- Tests unitaires avec mocks pour simuler erreurs réseau
-- Tests avec données JSON valides (pas de corruption testée volontairement)
-- Tests d'intégration pour chemins nominaux complets
-- Acceptation que certaines branches défensives restent non couvertes
-
-**Résultat** : 45.4% de couverture de branches (acceptable mais perfectible)
-
-### 5. Score de mutation PIT
-**Problème initial** : Score très bas (~15%) après première exécution PIT.
-
-**Analyse** :
-- 63% des mutants (384/608) dans les 6 classes Main non testées unitairement
-- Test strength réel de 52% sur code couvert (plus représentatif)
-- Nombreux mutants sur getters/setters triviaux
-- Mutants ConditionalsBoundaryMutator difficiles à tuer sans tests de valeurs exactes à la limite
-
-**Actions entreprises** :
-- Ajout de tests ciblés pour branches conditionnelles (NegateConditionalsMutator)
-- Amélioration assertions pour tuer ReturnValsMutator
-- Acceptation que Main ne soit pas testé unitairement (conception volontaire)
-
-**Résultat** : 19% global, mais 52% test strength sur code testé (satisfaisant)
-
-### 6. Temps de correspondance minimum
-**Problème** : Choix du temps minimum entre deux transports pour qu'une correspondance soit réaliste.
-
-**Décision** : 60 minutes (augmenté depuis 30 minutes initial)
-- Justification : Permet descendre du train/avion, traverser la gare/aéroport, embarquer dans le suivant
-- Implémentation : Constante MIN_CONNECTION_MINUTES dans JsonTransportService
-- Tests : Vérification explicite dans IntegrationMultiLegTransportIT
-
-### 7. Organisation des tests unitaires vs intégration
-**Problème** : Confusion initiale sur quels tests doivent être unitaires (*Test.java) vs intégration (*IT.java).
-
-**Règles établies** :
-- **Tests unitaires** : Isolent chaque service avec doublures (mocks/stubs), testent logique métier
-- **Tests d'intégration** : Utilisent tous les services réels, vérifient scénarios bout-en-bout
-
-**Bénéfices** :
-- Tests unitaires rapides (6 secondes pour 35 tests)
-- Tests d'intégration plus lents mais exhaustifs (12 secondes pour 8 tests)
-- Séparation claire facilitée par Maven (mvn test -DskipITs)
-
----
-
+| Classe | Instructions | Branches | Commentaire |
+|--------|--------------|----------|-------------|
+```
+serveur/
+├── src/main/java/fr/univ/holitrip/
+│   ├── service/                    # Interfaces
+│   │   ├── TransportService.java
+│   │   ├── HotelService.java
+│   │   ├── ActivityService.java
+│   │   ├── GeocodingService.java
+│   │   ├── DistanceService.java
+│   │   └── PackageService.java
+│   ├── service/impl/               # Implémentations
+│   │   ├── JsonTransportService.java
+│   │   ├── JsonHotelService.java
+│   │   ├── JsonActivityService.java
+│   │   ├── ApiGeocodingService.java
+│   │   ├── HaversineDistanceService.java
+│   │   └── PackageBuilder.java
+│   ├── util/                       # Utilitaires
+│   │   └── TransportHelper.java
+│   ├── model/                      # Modèles
+│   │   ├── Transport.java
+│   │   ├── Trip.java
+│   │   ├── Hotel.java
+│   │   ├── Activity.java
+│   │   ├── Package.java
+│   │   └── Coordinates.java
+│   ├── exception/
+│   │   └── GeocodingException.java
+│   └── HolitripMain.java 
+├── src/main/resources/
+│   ├── data/
+│   │   ├── transports.json
+│   │   ├── hotels.json
+│   │   └── activities.json
+│   └── application.properties
+├── src/test/java/fr/univ/holitrip/
+│   ├── service/unit/               # Tests unitaires (107)
+│   │   ├── PackageServiceTest.java (40 tests)
+│   │   ├── TransportServiceTest.java (10 tests)
+│   │   ├── HotelServiceTest.java (9 tests)
+│   │   ├── ActivityServiceTest.java (3 tests)
+│   │   ├── ApiGeocodingServiceTest.java (6 tests)
+│   │   ├── DistanceServiceTest.java (2 tests)
+│   │   ├── TransportHelperTest.java (24 tests)
+│   │   └── PackageTest.java (13 tests)
+│   └── service/integration/         # Tests d'intégration (17)
+│       └── *.IT.java
+└── pom.xml

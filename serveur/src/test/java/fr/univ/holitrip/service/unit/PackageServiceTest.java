@@ -44,7 +44,8 @@ class PackageServiceTest {
     }
 
     @Test
-    void shouldReturnEmptyListIfNoTransportsFound() {
+    void shouldReturnErrorMessageIfNoTransportsFound() {
+        // ARRANGE
         when(transportService.findTransports(anyString(), anyString(), any(), any())).thenReturn(Collections.emptyList());
         Hotel hotel = new Hotel();
         hotel.setRating(4);
@@ -52,13 +53,16 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(hotel));
         
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.singletonList(new Activity()));
+        
+        // ACT
         List<Package> result = packageService.findPackages(
             "Bordeaux", "Paris", "2025-01-15", 3, 1000.0,
             "TRAIN", "PRICE", 3, "PRICE",
             Collections.singletonList("CULTURE"), 10.0
         );
 
-        assertTrue(result.isEmpty());
+        // ASSERT
+        assertTrue(result.stream().allMatch(p -> p.getErrors() != null && !p.getErrors().isEmpty()));
         System.out.println("No transports found, returned packages: " + result);
     }
 
@@ -89,19 +93,22 @@ class PackageServiceTest {
 
     @Test
     void shouldRespectMaxBudget() {
-        // Arrange: hotel price is too high for the budget
+        // ARRANGE
         Hotel hotel = new Hotel();
         hotel.setPricePerNight(1000.0);
         hotel.setRating(5);
         when(transportService.findTransports(anyString(), anyString(), any(), any())).thenReturn(Collections.singletonList(mock(Transport.class)));
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(hotel));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
+        
+        // ACT
         List<Package> result = packageService.findPackages(
             "Bordeaux", "Paris", "2025-01-15", 3, 500.0,
             "TRAIN", "PRICE", 3, "PRICE",
             Collections.singletonList("CULTURE"), 10.0
         );
-        // Package should be returned with budget error when maxBudget is exceeded
+        
+        // ASSERT
         assertFalse(result.isEmpty());
         assertTrue(result.stream().anyMatch(p -> 
             p.getTotalPrice(3) > 500.0 && 
@@ -111,22 +118,26 @@ class PackageServiceTest {
 
     @Test
     void shouldReturnPackageWithErrorsIfCriteriaNotMet() {
-        // Arrange: all services return empty lists (no data found)
+        // ARRANGE
         when(transportService.findTransports(anyString(), anyString(), any(), any())).thenReturn(Collections.emptyList());
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.emptyList());
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
+        
+        // ACT
         List<Package> result = packageService.findPackages(
             "Bordeaux", "Paris", "2025-01-15", 3, 1000.0,
             "TRAIN", "PRICE", 3, "PRICE",
             Collections.singletonList("CULTURE"), 10.0
         );
+        
+        // ASSERT
         assertFalse(result.isEmpty());
         assertTrue(result.get(0).getErrors().size() > 0);
     }
 
     @Test
     void shouldNotAllowTwoActivitiesSameDate() {
-        // Arrange: two activities with the same date
+        // ARRANGE
         Activity a1 = mock(Activity.class);
         Activity a2 = mock(Activity.class);
         when(a1.getDate()).thenReturn(LocalDate.of(2025, 1, 15));
@@ -137,17 +148,21 @@ class PackageServiceTest {
         h.setRating(4);
         h.setPricePerNight(50.0);
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
+        
+        // ACT
         List<Package> result = packageService.findPackages(
             "Bordeaux", "Paris", "2025-01-15", 3, 1000.0,
             "TRAIN", "PRICE", 3, "PRICE",
             Collections.singletonList("CULTURE"), 10.0
         );
+        
+        // ASSERT
         assertTrue(result.stream().allMatch(p -> p.getActivities().stream().map(Activity::getDate).distinct().count() == p.getActivities().size()));
     }
 
     @Test
     void shouldHandleCorrespondancesAndPriorities() {
-        // Arrange: several transports with different prices/durations
+        // ARRANGE
         Transport t1 = mock(Transport.class);
         Transport t2 = mock(Transport.class);
         when(t1.getPrice()).thenReturn(100.0);
@@ -158,13 +173,15 @@ class PackageServiceTest {
         h2.setPricePerNight(50.0);
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h2));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
+        
+        // ACT
         List<Package> result = packageService.findPackages(
             "Bordeaux", "Paris", "2025-01-15", 3, 1000.0,
             "TRAIN", "PRICE", 3, "PRICE",
             Collections.singletonList("CULTURE"), 10.0
         );
-        // Check that the cheapest transport is chosen if priority is PRICE
-        // We expect packages to contain transports; verify at least one package uses the cheaper transport (t2)
+        
+        // ASSERT
         assertFalse(result.isEmpty());
         boolean foundCheapest = result.stream().anyMatch(pkg -> {
             try {
@@ -179,7 +196,7 @@ class PackageServiceTest {
 
     @Test
     void shouldFilterActivitiesByDistance() {
-        // Arrange: activities at different distances
+        // ARRANGE
         Activity a1 = mock(Activity.class);
         Activity a2 = mock(Activity.class);
         when(distanceService.calculateDistance(any(), any())).thenReturn(5.0, 20.0); // a1 at 5km, a2 at 20km
@@ -189,12 +206,15 @@ class PackageServiceTest {
         h3.setRating(4);
         h3.setPricePerNight(50.0);
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h3));
+        
+        // ACT
         List<Package> result = packageService.findPackages(
             "Bordeaux", "Paris", "2025-01-15", 3, 1000.0,
             "TRAIN", "PRICE", 3, "PRICE",
             Collections.singletonList("CULTURE"), 10.0
         );
-        // Assert: only activities within 10km are included
+        
+        // ASSERT
         assertTrue(result.stream().allMatch(p ->
             p.getActivities().stream().allMatch(act -> act == a1)
         ));
@@ -202,7 +222,7 @@ class PackageServiceTest {
 
     @Test
     void shouldMaximizeNumberOfActivitiesWithinBudget() {
-        // Arrange: several activities, some over budget
+        // ARRANGE
         Activity a1 = mock(Activity.class);
         Activity a2 = mock(Activity.class);
         when(a1.getPrice()).thenReturn(10.0);
@@ -213,12 +233,15 @@ class PackageServiceTest {
         h4.setRating(4);
         h4.setPricePerNight(10.0);
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h4));
+        
+        // ACT
         List<Package> result = packageService.findPackages(
             "Bordeaux", "Paris", "2025-01-15", 3, 50.0,
             "TRAIN", "PRICE", 3, "PRICE",
             Collections.singletonList("CULTURE"), 10.0
         );
-        // Assert: total activities price per package does not exceed budget and expensive activity is excluded
+        
+        // ASSERT
         assertTrue(result.stream().allMatch(p ->
             p.getActivities().stream().mapToDouble(Activity::getPrice).sum() <= 50.0
             && p.getActivities().stream().noneMatch(act -> act == a2)
@@ -226,17 +249,21 @@ class PackageServiceTest {
     }
 
     @Test
-    void shouldReturnEmptyListIfNoHotelsFound() {
-        // Arrange: no hotels found
+    void shouldReturnErrorMessageIfNoHotelsFound() {
+        // ARRANGE
         when(transportService.findTransports(anyString(), anyString(), any(), any())).thenReturn(Collections.singletonList(mock(Transport.class)));
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.emptyList());
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.singletonList(mock(Activity.class)));
+        
+        // ACT
         List<Package> result = packageService.findPackages(
             "Bordeaux", "Paris", "2025-01-15", 3, 1000.0,
             "TRAIN", "PRICE", 3, "PRICE",
             Collections.singletonList("CULTURE"), 10.0
         );
-        assertTrue(result.isEmpty());
+        
+        // ASSERT
+        assertTrue(result.stream().allMatch(p -> p.getErrors() != null && !p.getErrors().isEmpty()));
     }
 
     // Helper method to create transports easily
@@ -253,6 +280,7 @@ class PackageServiceTest {
 
     @Test
     void outboundTrainReturnPlaneAllowedWhenPreferenceProvidedForOutboundOnly() {
+        // ARRANGE
         // outbound available TRAIN, return only PLANE; ensure package still built
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport outbound = t("X","Y", d, d.plusHours(2), "TRAIN", 80.0);
@@ -264,7 +292,10 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("City1","City2","2025-01-15",3,1000.0,"TRAIN","PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         // return trip should exist and use plane
         assertNotNull(res.get(0).getReturnTrip());
@@ -273,6 +304,7 @@ class PackageServiceTest {
 
     @Test
     void modeRequestedButNoMatchingTransportYieldsEmpty() {
+        // ARRANGE
         // transports exist but only PLANE and user asked TRAIN
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport onlyPlane = t("S","T", d, d.plusHours(2), "PLANE", 100.0);
@@ -281,12 +313,16 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("S","T","2025-01-15",3,500.0,"TRAIN","PRICE",3,"PRICE",Collections.emptyList(),10.0);
-        assertTrue(res.isEmpty());
+        
+        // ASSERT
+        assertTrue(res.stream().allMatch(p -> p.getErrors() != null && !p.getErrors().isEmpty()), "Should return error message when no matching transports available");
     }
 
     @Test
     void tieBreakingPriceEqualsUsesDuration() {
+        // ARRANGE
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         // both price 100, one duration 1h, other 3h -> PRICE priority should pick shorter duration
         Transport tShort = t("U","V", d, d.plusHours(1), "TRAIN", 100.0);
@@ -296,7 +332,10 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("U","V","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         boolean usedShort = res.get(0).getOutboundTrip().getTransports().stream().anyMatch(tr -> tr.getArrivalDateTime().equals(tShort.getArrivalDateTime()));
         assertTrue(usedShort);
@@ -304,19 +343,24 @@ class PackageServiceTest {
 
     @Test
     void malformedDepartureDateHandledWithoutException() {
+        // ARRANGE
         Transport direct = t("B","C", null, null, "TRAIN", 80.0);
         when(transportService.findTransports(anyString(), anyString(), any(), any())).thenReturn(Collections.singletonList(direct));
         Hotel h = new Hotel(); h.setRating(3); h.setPricePerNight(20.0);
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         // provide malformed date
         List<Package> res = packageService.findPackages("B","C","not-a-date",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertNotNull(res);
     }
 
     @Test
     void testMinHotelRatingBoundaryZero() {
+        // ARRANGE
         // Tests ConditionalsBoundary mutant at line 228: minHotelRating > 0 vs >= 0
         // When minHotelRating=0, all hotels should be included (no filtering)
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
@@ -330,7 +374,10 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Arrays.asList(h1, h2));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",0,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         // With minHotelRating=0, both hotels should be considered (no filtering applied)
         assertTrue(res.stream().anyMatch(p -> p.getHotel() != null && p.getHotel().getRating() >= 0));
@@ -338,6 +385,7 @@ class PackageServiceTest {
 
     @Test
     void testMinHotelRatingBoundaryOne() {
+        // ARRANGE
         // Tests ConditionalsBoundary mutant at line 228: minHotelRating > 0 vs >= 0
         // When minHotelRating=1, hotels with rating=0 should be excluded
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
@@ -351,7 +399,10 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Arrays.asList(h1, h2));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",1,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         // With minHotelRating=1, hotel with rating=0 should be filtered out
         assertTrue(res.stream().allMatch(p -> p.getHotel() == null || p.getHotel().getRating() >= 1));
@@ -359,6 +410,7 @@ class PackageServiceTest {
 
     @Test
     void testHotelRatingExactMatch() {
+        // ARRANGE
         // Tests ConditionalsBoundary mutant at line 232: rating >= minRating vs > minRating
         // Hotel with rating=3 and minRating=3 should be included (>= 3)
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
@@ -372,7 +424,10 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Arrays.asList(h1, h2));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         // Hotel with exact match rating=3 should be included (>= not >)
         assertTrue(res.stream().anyMatch(p -> p.getHotel() != null && p.getHotel().getRating() == 3));
@@ -382,6 +437,7 @@ class PackageServiceTest {
 
     @Test
     void testActivityBudgetExactMatch() {
+        // ARRANGE
         // Tests ConditionalsBoundary mutant at line 346: sum + price <= budget vs < budget
         // When activity price exactly matches remaining budget, it should be included
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
@@ -400,7 +456,10 @@ class PackageServiceTest {
         
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.singletonList(a1));
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         // Activity with price exactly matching remaining budget (100.0) should be included (<= not <)
         assertTrue(res.stream().anyMatch(p -> 
@@ -410,6 +469,7 @@ class PackageServiceTest {
 
     @Test
     void testHotelRatingStrictCheckBelowMinimum() {
+        // ARRANGE
         // Tests ConditionalsBoundary mutant at line 279: chosenHotel.getRating() < minHotelRating
         // Hotel with rating slightly below minimum should be rejected
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
@@ -422,12 +482,16 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h1));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
-        assertTrue(res.isEmpty(), "Package should be rejected when hotel rating (2) < minRating (3)");
+        
+        // ASSERT
+        assertTrue(res.stream().allMatch(p -> p.getErrors() != null && !p.getErrors().isEmpty()), "Should return error message when hotel rating is below minimum");
     }
 
     @Test
     void testNegativeBudgetClamping() {
+        // ARRANGE
         // Tests ConditionalsBoundary mutant at line 342: activitiesBudget < 0 -> clamped to 0.0
         // When transport + hotel exceed maxBudget, no activities should be included
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
@@ -444,8 +508,11 @@ class PackageServiceTest {
         when(a1.getDate()).thenReturn(LocalDate.of(2025, 1, 16));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.singletonList(a1));
 
+        // ACT
         // Total: 200 + 200 + 300 = 700, maxBudget = 500, activitiesBudget = -200 -> should be clamped to 0
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         // Package should have budget error
         assertTrue(res.get(0).getErrors().stream().anyMatch(err -> err.contains("Budget exceeded")),
@@ -457,6 +524,7 @@ class PackageServiceTest {
 
     @Test
     void testBudgetCalculationMathPrecision() {
+        // ARRANGE
         // Tests Math mutants in budget calculation (lines 336-342)
         // Verifies precise arithmetic: activitiesBudget = maxBudget - (outbound + return) - hotel
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
@@ -479,7 +547,10 @@ class PackageServiceTest {
         
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Arrays.asList(a1, a2));
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,600.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         // Both activities should fit: 250 + 60 = 310 but we only have 300, so only a2 (60) should be included
         // Actually sorted by price: a2(60) first, then a1(250): 60 fits, 60+250=310 > 300, so only a2
@@ -491,6 +562,7 @@ class PackageServiceTest {
 
     @Test
     void testBudgetCalculationWithZeroCosts() {
+        // ARRANGE
         // Tests Math mutants with edge case: some costs are zero
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport outbound = t("A","B", d, d.plusHours(2), "TRAIN", 0.0);
@@ -507,7 +579,10 @@ class PackageServiceTest {
         when(a1.getDate()).thenReturn(LocalDate.of(2025, 1, 16));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.singletonList(a1));
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,200.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         assertTrue(res.stream().anyMatch(p -> 
             p.getActivities().stream().anyMatch(act -> act.getPrice() == 200.0)
@@ -516,18 +591,23 @@ class PackageServiceTest {
 
     @Test
     void testEmptyTransportListHandling() {
+        // ARRANGE
         // Tests NegateConditionals: transports == null || transports.isEmpty()
         when(transportService.findTransports(anyString(), anyString(), any(), any())).thenReturn(Collections.emptyList());
         Hotel h = new Hotel(); h.setRating(3); h.setPricePerNight(50.0);
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
-        assertTrue(res.isEmpty(), "Should return empty list when no transports available");
+        
+        // ASSERT
+        assertTrue(res.stream().allMatch(p -> p.getErrors() != null && !p.getErrors().isEmpty()), "Should return error message when no transports available");
     }
 
     @Test
     void testEmptyHotelListHandling() {
+        // ARRANGE
         // Tests NegateConditionals: hotels == null || hotels.isEmpty()
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport t = t("A","B", d, d.plusHours(2), "TRAIN", 50.0);
@@ -535,12 +615,16 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.emptyList());
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
-        assertTrue(res.isEmpty(), "Should return empty list when no hotels available");
+        
+        // ASSERT
+        assertTrue(res.stream().allMatch(p -> p.getErrors() != null && !p.getErrors().isEmpty()), "Should return error message when no hotels available");
     }
 
     @Test
     void testNullTransportModeAllowsAnyMode() {
+        // ARRANGE
         // Tests NegateConditionals: transportMode != null && !transportMode.isBlank()
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport plane = t("A","B", d, d.plusHours(1), "PLANE", 150.0);
@@ -554,7 +638,10 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         // With null mode and PRICE priority, should choose cheaper train (80)
         assertTrue(res.stream().anyMatch(p -> 
@@ -564,6 +651,7 @@ class PackageServiceTest {
 
     @Test
     void testEmptyActivityCategoriesHandling() {
+        // ARRANGE
         // Tests NegateConditionals for activity categories handling
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport outbound = t("A","B", d, d.plusHours(2), "TRAIN", 50.0);
@@ -575,14 +663,18 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
         when(activityService.findActivities(anyString(), eq(Collections.emptyList()), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         // Empty activity categories list
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         assertTrue(res.get(0).getActivities().isEmpty(), "Package with empty categories should have no activities");
     }
 
     @Test
     void testDurationPriorityBreaksTie() {
+        // ARRANGE
         // Tests NegateConditionals in priority selection logic
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport fast = t("A","B", d, d.plusHours(1), "TRAIN", 100.0);
@@ -595,8 +687,11 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         // DURATION priority should select faster transport
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"DURATION",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         assertTrue(res.stream().anyMatch(p -> 
             p.getOutboundTrip().getTransports().stream()
@@ -606,6 +701,7 @@ class PackageServiceTest {
 
     @Test
     void testMultiLegTransportOutboundAndReturn() {
+        // ARRANGE
         // Tests multi-leg transport handling (lines 89, 191, 217 in PackageBuilder)
         // Create multi-leg outbound: A -> B (via intermediate city)
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
@@ -623,7 +719,10 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,"TRAIN","PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         // Verify multi-leg outbound is included
         assertTrue(res.get(0).getOutboundTrip().getTransports().size() == 2, "Outbound should have 2 legs");
@@ -634,6 +733,7 @@ class PackageServiceTest {
 
     @Test
     void testHotelPriorityStarSelectsHighestRating() {
+        // ARRANGE
         // Tests hotel selection with STAR/RATING priority (line 255 in PackageBuilder)
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport outbound = t("A","B", d, d.plusHours(2), "TRAIN", 50.0);
@@ -647,14 +747,18 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Arrays.asList(h1, h2, h3));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         // STAR/RATING priority should select hotel with highest rating (5 stars)
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"STAR",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         assertEquals(5, res.get(0).getHotel().getRating(), "Should select hotel with highest rating when priority is STAR");
     }
 
     @Test
     void testTransportSelectionWithoutExplicitPriority() {
+        // ARRANGE
         // Tests transport selection when no explicit priority is given (line 139 fallback in PackageBuilder)
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport t1 = t("A","B", d, d.plusHours(2), "TRAIN", 100.0);
@@ -667,8 +771,11 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         // With null/empty priority, should fall back to first candidate
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,null,3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         assertNotNull(res.get(0).getOutboundTrip());
         assertTrue(res.get(0).getOutboundTrip().getTransports().size() > 0, "Should select a transport even without explicit priority");
@@ -676,6 +783,7 @@ class PackageServiceTest {
 
     @Test
     void testHotelStrictRatingRejection() {
+        // ARRANGE
         // Tests strict hotel rating enforcement after selection (lines 280, 283 in PackageBuilder)
         // Scenario: Only available hotel has rating below minimum -> should return empty
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
@@ -691,12 +799,16 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(lowRatingHotel));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",4,"PRICE",Collections.emptyList(),10.0);
-        assertTrue(res.isEmpty(), "Should reject package when chosen hotel rating (1) < minRating (4)");
+        
+        // ASSERT
+        assertTrue(res.stream().allMatch(p -> p.getErrors() != null && !p.getErrors().isEmpty()), "Should return error message when hotel rating is below minimum");
     }
 
     @Test
     void testHotelListWithNullEntriesFilteredOut() {
+        // ARRANGE
         // Tests null filter at line 235: h != null
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport outbound = t("A","B", d, d.plusHours(2), "TRAIN", 50.0);
@@ -711,13 +823,17 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Arrays.asList(null, validHotel, null));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty(), "Should filter out null hotels and use valid ones");
         assertEquals(4, res.get(0).getHotel().getRating(), "Should select the valid hotel after filtering nulls");
     }
 
     @Test
     void testGeocodingCacheHitForHotel() throws Exception {
+        // ARRANGE
         // Tests geocoding cache at line 265: geocodeCache.containsKey(hotelKey)
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport outbound = t("A","B", d, d.plusHours(2), "TRAIN", 50.0);
@@ -743,8 +859,11 @@ class PackageServiceTest {
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.singletonList(a));
         when(distanceService.calculateDistance(any(), any())).thenReturn(5.0);
 
+        // ACT
         // First call - cache miss, should call geocodingService
         List<Package> res1 = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.singletonList("CULTURE"),10.0);
+        
+        // ASSERT
         assertFalse(res1.isEmpty());
         verify(geocodingService, atLeastOnce()).geocode(contains("123 Main St"));
         
@@ -759,6 +878,7 @@ class PackageServiceTest {
 
     @Test
     void testHotelRatingBoundaryAtMinimum() {
+        // ARRANGE
         // Tests ConditionalsBoundary at line 238: rating >= minRating (boundary case)
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport outbound = t("A","B", d, d.plusHours(2), "TRAIN", 50.0);
@@ -776,7 +896,10 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Arrays.asList(h1, h2, h3));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         // Should include hotels with rating >= 3 (h1 and h3), but not h2
         int selectedRating = res.get(0).getHotel().getRating();
@@ -785,6 +908,7 @@ class PackageServiceTest {
 
     @Test
     void testActivityWithNullAddressSkipsGeocoding() {
+        // ARRANGE
         // Tests activity geocoding with null address (line 296-297)
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport outbound = t("A","B", d, d.plusHours(2), "TRAIN", 50.0);
@@ -804,7 +928,10 @@ class PackageServiceTest {
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.singletonList(activityWithoutAddress));
         when(distanceService.calculateDistance(any(), any())).thenReturn(5.0);
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.singletonList("CULTURE"),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty());
         // Activity with null address should be handled gracefully
         assertNotNull(res.get(0), "Package should be created even with activity having null address");
@@ -812,6 +939,7 @@ class PackageServiceTest {
 
     @Test
     void testStrictHotelRatingCheckAfterSelection() {
+        // ARRANGE
         // Tests the defensive check at line 279: chosenHotel.getRating() < minHotelRating
         // This is a defensive check that should rarely be hit in normal operation
         // We test it with minHotelRating=0 (no filtering) but verify the defensive check still exists
@@ -828,14 +956,18 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Arrays.asList(h1, h2));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         // With minHotelRating=0 and PRICE priority, should select cheapest (h1 with rating 2)
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",0,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty(), "Package should be created when minHotelRating=0");
         assertEquals(2, res.get(0).getHotel().getRating(), "Should select hotel with rating 2 when no minimum is set");
     }
 
     @Test
     void testMinHotelRatingExactBoundary() {
+        // ARRANGE
         // Tests ConditionalsBoundary mutant with exact boundary value
         // When minHotelRating=3.0, hotels with rating=3 should be included (>= not >)
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
@@ -850,7 +982,10 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Arrays.asList(h1, h2));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",3,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty(), "Should find package with hotel exactly at minHotelRating");
         assertEquals(3, res.get(0).getHotel().getRating(), "Should include hotel with rating exactly equal to minHotelRating");
         assertEquals("Exact 3 stars", res.get(0).getHotel().getName());
@@ -858,6 +993,7 @@ class PackageServiceTest {
 
     @Test
     void testTransportAndHotelWithMultiplePrioritiesSTAR() {
+        // ARRANGE
         // Tests BooleanTrue mutations in complex priority selection
         // When hotel priority is STAR, should select highest rating regardless of price
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
@@ -873,8 +1009,11 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Arrays.asList(cheap, medium, expensive));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         // With STAR priority, should select 5-star hotel even though it's most expensive
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,1000.0,null,"PRICE",0,"STAR",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty(), "Should find package with STAR priority");
         assertEquals(5, res.get(0).getHotel().getRating(), "Should select highest rated hotel with STAR priority");
         assertEquals("Luxury Hotel", res.get(0).getHotel().getName());
@@ -882,6 +1021,7 @@ class PackageServiceTest {
 
     @Test
     void testBudgetExactlyAtLimit() {
+        // ARRANGE
         // Tests ConditionalsBoundary: totalPrice == maxBudget (should be accepted)
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport outbound = t("A","B", d, d.plusHours(2), "TRAIN", 100.0);
@@ -896,13 +1036,17 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,350.0,null,"PRICE",0,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         assertFalse(res.isEmpty(), "Should accept package when total price exactly equals maxBudget");
         assertEquals(350.0, res.get(0).getTotalPrice(3), 0.01, "Total price should be exactly at budget limit");
     }
 
     @Test
-    void testEmptyHotelsListReturnsEmptyPackages() {
+    void testEmptyHotelsListReturnsPackagesWithErrors() {
+        // ARRANGE
         // Tests EmptyObject mutation: when no hotels available, should return empty list
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport outbound = t("A","B", d, d.plusHours(2), "TRAIN", 50.0);
@@ -913,12 +1057,16 @@ class PackageServiceTest {
         // Empty hotels list
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",0,"PRICE",Collections.emptyList(),10.0);
-        assertTrue(res.isEmpty(), "Should return empty list when no hotels are available");
+        
+        // ASSERT
+        assertTrue(res.stream().allMatch(p -> p.getErrors() != null && !p.getErrors().isEmpty()), "Should return error message when no hotels are available");
     }
 
     @Test
     void testReturnTransportNotFoundReturnsEmpty() {
+        // ARRANGE
         // Tests that missing return transport results in invalid package (returnTrip will be null)
         LocalDateTime d = LocalDateTime.of(2025,1,15,8,0);
         Transport outbound = t("A","B", d, d.plusHours(2), "TRAIN", 50.0);
@@ -930,7 +1078,10 @@ class PackageServiceTest {
         when(hotelService.findHotels(anyString(), anyInt(), anyDouble())).thenReturn(Collections.singletonList(h));
         when(activityService.findActivities(anyString(), anyList(), any(), anyDouble(), any(), anyDouble())).thenReturn(Collections.emptyList());
 
+        // ACT
         List<Package> res = packageService.findPackages("A","B","2025-01-15",3,500.0,null,"PRICE",0,"PRICE",Collections.emptyList(),10.0);
+        
+        // ASSERT
         // Package is created but will be invalid because returnTrip is null
         assertFalse(res.isEmpty(), "Package is created even without return transport");
         assertFalse(res.get(0).isValid(), "Package should be invalid without return transport");

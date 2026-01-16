@@ -156,12 +156,15 @@ public class TransportServiceTest {
 
     @Test
     void testFindTransports_MultiLeg_BordeauxToNice() {
+        //ARRANGE
         // Test multi-leg journey: Bordeaux -> Paris -> Nice
         // Should find connections through Paris with sufficient connection time
         LocalDateTime departureDate = LocalDateTime.of(2026, 2, 10, 8, 0);
         
+        //ACT
         List<Transport> transports = transportService.findTransports("Bordeaux", "Nice", departureDate, null);
         
+        //ASSERT
         assertNotNull(transports);
         // If multi-leg journeys exist, they should have valid connection times (>= 60 minutes)
         // This tests the BFS algorithm in JsonTransportService
@@ -184,12 +187,15 @@ public class TransportServiceTest {
 
     @Test
     void testFindTransports_MultiLeg_WithModePreference() {
+        //ARRANGE
         // Test multi-leg with mode preference TRAIN
         // All legs should be of the same mode when mode is specified
         LocalDateTime departureDate = LocalDateTime.of(2026, 2, 10, 8, 0);
         
+        //ACT
         List<Transport> transports = transportService.findTransports("Tours", "Nice", departureDate, "TRAIN");
         
+        //ASSERT
         assertNotNull(transports);
         // When mode is specified, all transports should match that mode
         assertFalse(transports.isEmpty());
@@ -214,13 +220,16 @@ public class TransportServiceTest {
 
     @Test
     void testFindTransports_ConnectionTimeValidation() {
+        //ARRANGE
         // Test that multi-leg journeys respect minimum connection time (60 minutes)
         // This is a regression test for the BFS algorithm
         LocalDateTime departureDate = LocalDateTime.of(2026, 2, 10, 8, 0);
         
+        //ACT
         List<Transport> transports = transportService.findTransports("Lille", "Eindhoven", 
         departureDate, null);
         
+        //ASSERT
         assertNotNull(transports);
         // The BFS algorithm should only return journeys with >= 60 min connection time
         // If no valid connection exists, result could be empty
@@ -254,13 +263,16 @@ public class TransportServiceTest {
     // time exist
     @Test
     void testFindTransports_NoSuficcientConnectionTime_ShouldReturnEmpty() {
+        //ARRANGE
         // Test that journeys with insufficient connection time are not returned
         // Using a departure time that would lead to tight connections
         LocalDateTime departureDate = LocalDateTime.of(2026, 2, 18, 12, 0);
         
+        //ACT
         List<Transport> transports = transportService.findTransports("Lille", "Eindhoven", 
         departureDate, null);
         
+        //ASSERT
         assertNotNull(transports);
         // If no valid connections with sufficient time exist, result should be empty
         assertTrue(transports.isEmpty(), "Expected no journeys due to insufficient connection time");

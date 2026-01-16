@@ -23,6 +23,7 @@ import fr.univ.holitrip.service.HotelService;
 import fr.univ.holitrip.service.GeocodingService;
 import fr.univ.holitrip.service.PackageService;
 import fr.univ.holitrip.service.TransportService;
+import fr.univ.holitrip.util.TransportHelper;
 
 public class PackageBuilder implements PackageService {
     private final TransportService transportService;
@@ -43,101 +44,6 @@ public class PackageBuilder implements PackageService {
 
     // Simple in-memory cache for geocoding results during a single execution.
     private final Map<String, Coordinates> geocodeCache;
-
-    // Helper: safe duration in minutes for a transport; large value if dates missing
-    private long transportDurationMinutes(Transport t) {
-        if (t == null || t.getDepartureDateTime() == null || t.getArrivalDateTime() == null) return Long.MAX_VALUE;
-        try {
-            return java.time.Duration.between(t.getDepartureDateTime(), t.getArrivalDateTime()).toMinutes();
-        } catch (Exception e) {
-            return Long.MAX_VALUE;
-        }
-    }
-
-    // Helper: calculate total duration for a list of transports (multi-leg support)
-    // private long transportListDurationMinutes(List<Transport> transports) {
-    //     if (transports == null || transports.isEmpty()) return Long.MAX_VALUE;
-    //     try {
-    //         java.time.LocalDateTime firstDeparture = transports.get(0).getDepartureDateTime();
-    //         java.time.LocalDateTime lastArrival = transports.get(transports.size() - 1).getArrivalDateTime();
-    //         if (firstDeparture == null || lastArrival == null) return Long.MAX_VALUE;
-    //         return java.time.Duration.between(firstDeparture, lastArrival).toMinutes();
-    //     } catch (Exception e) {
-    //         return Long.MAX_VALUE;
-    //     }
-    // }
-
-    // Helper: calculate total price for a list of transports
-    // private double transportListPrice(List<Transport> transports) {
-    //     if (transports == null || transports.isEmpty()) return Double.MAX_VALUE;
-    //     return transports.stream().mapToDouble(Transport::getPrice).sum();
-    // }
-
-    // Helper: check if transports list represents a multi-leg solution
-    private boolean isMultiLeg(List<Transport> transports) {
-        if (transports == null || transports.size() < 2) return false;
-        
-        // Verify continuity: each transport's arrival city = next transport's departure city
-        for (int i = 0; i < transports.size() - 1; i++) {
-            Transport current = transports.get(i);
-            Transport next = transports.get(i + 1);
-            if (current == null || next == null) return false;
-            if (current.getArrivalCity() == null || !current.getArrivalCity().equals(next.getDepartureCity())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // Helper: validate mode compatibility for multi-leg or single transport
-    private boolean validateTransportMode(List<Transport> transports, String preferredMode) {
-        if (transports == null || transports.isEmpty()) return false;
-        if (preferredMode == null || preferredMode.isBlank()) return true;
-        
-        // Check if any transport has mode information
-        boolean anyWithMode = transports.stream().anyMatch(t -> t != null && t.getMode() != null && !t.getMode().isBlank());
-        if (!anyWithMode) return true; // No mode info available -> permissive
-        
-        // All transports must match preferred mode
-        return transports.stream()
-            .allMatch(t -> t != null && t.getMode() != null && preferredMode.equalsIgnoreCase(t.getMode()));
-    }
-
-    // Helper: select best transport from a list applying mode filter and priority
-    private Transport selectBestTransport(List<Transport> list, String preferredMode, String priority) {
-        if (list == null || list.isEmpty()) return null;
-        
-        // If preferredMode provided, prefer transports with that mode
-        List<Transport> candidates = list;
-        if (preferredMode != null && !preferredMode.isBlank()) {
-            List<Transport> filtered = list.stream()
-                    .filter(t -> t != null && preferredMode.equalsIgnoreCase(t.getMode()))
-                    .collect(Collectors.toList());
-            boolean anyWithMode = list.stream().anyMatch(t -> t != null && t.getMode() != null && !t.getMode().isBlank());
-            if (filtered.isEmpty()) {
-                if (anyWithMode) {
-                    return null; // Mode info exists but none matched -> enforce strictness
-                } else {
-                    candidates = list; // No mode info available -> don't enforce strictness
-                }
-            } else {
-                candidates = filtered;
-            }
-        }
-
-        if ("PRICE".equalsIgnoreCase(priority)) {
-            return candidates.stream()
-                    .min(Comparator.comparingDouble(Transport::getPrice)
-                            .thenComparingLong(this::transportDurationMinutes))
-                    .orElse(candidates.get(0));
-        } else if ("DURATION".equalsIgnoreCase(priority) || "TIME".equalsIgnoreCase(priority)) {
-            return candidates.stream()
-                    .min(Comparator.comparingLong(this::transportDurationMinutes)
-                            .thenComparingDouble(Transport::getPrice))
-                    .orElse(candidates.get(0));
-        }
-        return candidates.get(0);
-    }
 
     @Override
     public List<Package> findPackages(String departureCity, String destinationCity, String departureDate,
@@ -185,14 +91,14 @@ public class PackageBuilder implements PackageService {
         
         if (transports != null && !transports.isEmpty()) {
             // Check if transports represent a multi-leg solution from JsonTransportService
-            if (isMultiLeg(transports)) {
+            if (TransportHelper.isMultiLeg(transports)) {
                 // This is a multi-leg solution - validate mode and use directly
-                if (validateTransportMode(transports, transportMode)) {
+                if (TransportHelper.validateTransportMode(transports, transportMode)) {
                     chosenOutboundLegs = transports;
                 }
             } else {
                 // These are direct transport options - select best one
-                Transport chosen = selectBestTransport(transports, transportMode, transportPriority);
+                Transport chosen = TransportHelper.selectBestTransport(transports, transportMode, transportPriority);
                 if (chosen != null) {
                     chosenOutboundLegs = Collections.singletonList(chosen);
                 }
@@ -212,16 +118,16 @@ public class PackageBuilder implements PackageService {
         
         if (returnTransports != null && !returnTransports.isEmpty()) {
             // Check if return transports represent a multi-leg solution
-            if (isMultiLeg(returnTransports)) {
+            if (TransportHelper.isMultiLeg(returnTransports)) {
                 // This is a multi-leg solution - use directly without strict mode validation for return
                 chosenReturnLegs = returnTransports;
             } else {
                 // These are direct transport options - select best one
                 // Prefer transportMode if available, but accept any mode if not found
-                Transport chosen = selectBestTransport(returnTransports, transportMode, transportPriority);
+                Transport chosen = TransportHelper.selectBestTransport(returnTransports, transportMode, transportPriority);
                 if (chosen == null) {
                     // If preferred mode not found, take any available transport
-                    chosen = selectBestTransport(returnTransports, null, transportPriority);
+                    chosen = TransportHelper.selectBestTransport(returnTransports, null, transportPriority);
                 }
                 if (chosen != null) {
                     chosenReturnLegs = Collections.singletonList(chosen);
